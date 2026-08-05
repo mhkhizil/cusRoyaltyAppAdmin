@@ -2,6 +2,8 @@
 
 This file applies to the entire repository.
 
+**Before making any change, read [AI_STANDARDS.md](./AI_STANDARDS.md) first.** It defines architecture, TypeScript rules, responsive UI requirements, and shop theme tokens that every change must follow.
+
 ## Purpose
 
 Use this project as a **reusable frontend template** for authenticated apps.
@@ -9,7 +11,7 @@ It may become an admin dashboard, an internal tool, or another product UI.
 
 When implementing features, prioritize:
 
-- following [architecture.md](./architecture.md)
+- following [AI_STANDARDS.md](./AI_STANDARDS.md) and [architecture.md](./architecture.md)
 - exact backend contract matching
 - permission-aware route/sidebar behavior when your app needs it
 - consistency with existing page, hook, and service patterns
@@ -79,6 +81,8 @@ Starter examples already in the template:
 ## UI Rules
 
 - Use Tailwind utility classes for layout and styling
+- Every page must be responsive (mobile-first) — see [AI_STANDARDS.md](./AI_STANDARDS.md)
+- Use shop theme tokens (`bg-shop-primary`, `bg-shop-sidebar`, etc.) — never hardcode brand hex values in pages
 - Reuse shared UI components in `src/components/ui` where possible
 - Prefer clean, compact layouts over custom one-off designs
 - Keep pages thin; business logic belongs in services/hooks
@@ -90,7 +94,8 @@ Starter examples already in the template:
 
 ## Validation Rules
 
-- Run `npm run build` after meaningful frontend changes
+- Run `npm run build` after meaningful frontend changes (includes TypeScript typecheck)
+- Do not use `any`, `as any`, or untyped exports — see [AI_STANDARDS.md](./AI_STANDARDS.md)
 - Fix compile errors caused by your changes
 - Do not attempt to fix unrelated warnings unless asked
 

@@ -2,6 +2,36 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Shop brand tokens — values are set at runtime by applyShopTheme().
+ * To rebrand: update src/theme/shopTheme.ts only.
+ */
+:root {
+  --shop-primary: #0f172a;
+  --shop-primary-hover: #020617;
+  --shop-primary-foreground: #ffffff;
+  --shop-sidebar-bg: #0f172a;
+  --shop-sidebar-fg: #ffffff;
+  --shop-sidebar-muted: #94a3b8;
+  --shop-sidebar-border: rgba(255, 255, 255, 0.1);
+  --shop-accent: #2563eb;
+  --shop-accent-fg: #ffffff;
+  --shop-ring: rgba(15, 23, 42, 0.3);
+}
+
+@theme inline {
+  --color-shop-primary: var(--shop-primary);
+  --color-shop-primary-hover: var(--shop-primary-hover);
+  --color-shop-primary-foreground: var(--shop-primary-foreground);
+  --color-shop-sidebar: var(--shop-sidebar-bg);
+  --color-shop-sidebar-fg: var(--shop-sidebar-fg);
+  --color-shop-sidebar-muted: var(--shop-sidebar-muted);
+  --color-shop-sidebar-border: var(--shop-sidebar-border);
+  --color-shop-accent: var(--shop-accent);
+  --color-shop-accent-fg: var(--shop-accent-fg);
+  --color-shop-ring: var(--shop-ring);
+}
+
 @layer base {
   html {
     @apply antialiased;

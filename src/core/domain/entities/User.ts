@@ -1,6 +1,6 @@
 /**
- * User entity representing the core domain model for users in the system
- * This is independent of any framework or external concern
+ * Authenticated admin user domain entity.
+ * Populated from admin dashboard login (`adminAccess`) and admin-users list responses.
  */
 export class User {
   id!: string;
@@ -11,12 +11,14 @@ export class User {
   nickname?: string;
   adminRoleId?: string;
   adminRoleName?: string;
+  isRootAdmin?: boolean;
   permissions?: string[];
+  isActive?: boolean;
+  isBanned?: boolean;
   profileImageUrl?: string;
   createdDate?: Date;
   updatedDate?: Date;
 
-  // Index signature to allow access to properties by string key
   [key: string]: unknown;
 
   constructor(data: {
@@ -28,7 +30,10 @@ export class User {
     nickname?: string;
     adminRoleId?: string;
     adminRoleName?: string;
+    isRootAdmin?: boolean;
     permissions?: string[];
+    isActive?: boolean;
+    isBanned?: boolean;
     profileImageUrl?: string;
     createdDate?: Date;
     updatedDate?: Date;
@@ -36,11 +41,7 @@ export class User {
     Object.assign(this, data);
   }
 
-  /**
-   * Validates that the user entity contains valid data
-   */
   isValid(): boolean {
-    // Basic email regex pattern for domain entity validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     return (
@@ -53,17 +54,18 @@ export class User {
     );
   }
 
-  /**
-   * Check if user has admin role
-   */
   isAdmin(): boolean {
-    return this.role === "ADMIN";
+    return this.role === "ADMIN" || this.isRootAdmin === true;
   }
 
-  /**
-   * Check if user has staff role
-   */
   isStaff(): boolean {
-    return this.role === "STAFF";
+    return this.role === "STAFF" && this.isRootAdmin !== true;
+  }
+
+  hasRootAccess(): boolean {
+    return (
+      this.isRootAdmin === true ||
+      String(this.adminRoleName || "").toUpperCase() === "ROOT_ADMIN"
+    );
   }
 }

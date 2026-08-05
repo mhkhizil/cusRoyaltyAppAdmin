@@ -2,9 +2,11 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { MetricCard } from "@/components/ui/MetricCard";
+import { usePermissions } from "@/features/permissions/usePermissions";
 
 export function DashboardPage() {
   const { t } = useTranslation();
+  const { isFullAccess } = usePermissions();
 
   return (
     <section className="mx-auto max-w-6xl space-y-6">
@@ -19,14 +21,15 @@ export function DashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <MetricCard
-          title={t("dashboard.usersCard")}
+          title={t("dashboard.adminUsersCard")}
           value={t("dashboard.exampleValue")}
-          subtitle={t("dashboard.usersHint")}
+          subtitle={t("dashboard.adminUsersHint")}
+          variant="primary"
         />
         <MetricCard
-          title={t("dashboard.customersCard")}
+          title={t("dashboard.adminRolesCard")}
           value={t("dashboard.exampleValue")}
-          subtitle={t("dashboard.customersHint")}
+          subtitle={t("dashboard.adminRolesHint")}
         />
       </div>
 
@@ -37,14 +40,16 @@ export function DashboardPage() {
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {t("dashboard.nextStepsText")}
         </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Link to="/users">
-            <Button variant="secondary">{t("dashboard.openUsers")}</Button>
-          </Link>
-          <Link to="/customers">
-            <Button>{t("dashboard.openCustomers")}</Button>
-          </Link>
-        </div>
+        {isFullAccess ? (
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link to="/admin-users">
+              <Button variant="secondary">{t("dashboard.openAdminUsers")}</Button>
+            </Link>
+            <Link to="/admin-roles">
+              <Button>{t("dashboard.openAdminRoles")}</Button>
+            </Link>
+          </div>
+        ) : null}
       </div>
     </section>
   );

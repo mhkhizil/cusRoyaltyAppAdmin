@@ -37,6 +37,15 @@ function UsersIcon() {
   );
 }
 
+function RolesIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+      <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7z" />
+      <path d="M9.5 12l1.5 1.5L14.5 10" />
+    </svg>
+  );
+}
+
 function CustomersIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
@@ -131,7 +140,7 @@ export function AppShell() {
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
       <aside
         className={[
-          "flex shrink-0 flex-col border-r border-slate-800 bg-slate-900 text-white transition-[width] duration-200",
+          "flex shrink-0 flex-col border-r border-shop-sidebar-border bg-shop-sidebar text-shop-sidebar-fg transition-[width] duration-200",
           isSidebarExpanded ? "w-72" : "w-[4.5rem]",
         ].join(" ")}
       >
@@ -162,13 +171,22 @@ export function AppShell() {
               meta={t("shell.dashboardMeta")}
             />
           ) : null}
-          {canAccess(PAGE_PERMISSIONS.users) ? (
+          {canAccess(PAGE_PERMISSIONS.adminUsers) ? (
             <SidebarNavItem
-              to="/users"
+              to="/admin-users"
               collapsed={!isSidebarExpanded}
               icon={<UsersIcon />}
-              title={t("shell.usersTitle")}
-              meta={t("shell.usersMeta")}
+              title={t("shell.adminUsersTitle")}
+              meta={t("shell.adminUsersMeta")}
+            />
+          ) : null}
+          {canAccess(PAGE_PERMISSIONS.adminRoles) ? (
+            <SidebarNavItem
+              to="/admin-roles"
+              collapsed={!isSidebarExpanded}
+              icon={<RolesIcon />}
+              title={t("shell.adminRolesTitle")}
+              meta={t("shell.adminRolesMeta")}
             />
           ) : null}
           {canAccess(PAGE_PERMISSIONS.customers) ? (

@@ -4,12 +4,20 @@ import { ApiUserRepository } from "../repositories/ApiUserRepository";
 import { ApiAuthRepository } from "../repositories/ApiAuthRepository";
 import { ICustomerRepository } from "../../domain/repositories/ICustomerRepository";
 import { ApiCustomerRepository } from "../repositories/ApiCustomerRepository";
+import { IAdminRoleRepository } from "../../domain/repositories/IAdminRoleRepository";
+import { ApiAdminRoleRepository } from "../repositories/ApiAdminRoleRepository";
+import { IAdminUserRepository } from "../../domain/repositories/IAdminUserRepository";
+import { ApiAdminUserRepository } from "../repositories/ApiAdminUserRepository";
 import { IAuthService } from "../../domain/services/IAuthService";
 import { AuthService } from "../../application/services/AuthService";
 import { UserManagementService } from "../../application/services/UserManagementService";
 import { CustomerManagementService } from "../../application/services/CustomerManagementService";
+import { AdminRoleService } from "../../application/services/AdminRoleService";
+import { AdminUserService } from "../../application/services/AdminUserService";
 import { ICustomerService } from "../../domain/services/ICustomerService";
 import { IUserService } from "../../domain/services/IUserService";
+import { IAdminRoleService } from "../../domain/services/IAdminRoleService";
+import { IAdminUserService } from "../../domain/services/IAdminUserService";
 
 /**
  * Dependency Injection Container
@@ -40,6 +48,16 @@ class Container {
       new ApiCustomerRepository(this.resolve("httpClient"))
     );
 
+    this.register<IAdminRoleRepository>(
+      "adminRoleRepository",
+      new ApiAdminRoleRepository(this.resolve("httpClient"))
+    );
+
+    this.register<IAdminUserRepository>(
+      "adminUserRepository",
+      new ApiAdminUserRepository(this.resolve("httpClient"))
+    );
+
     this.register<IAuthService>(
       "authService",
       new AuthService(this.resolve("authRepository"))
@@ -53,6 +71,16 @@ class Container {
     this.register<ICustomerService>(
       "customerService",
       new CustomerManagementService(this.resolve("customerRepository"))
+    );
+
+    this.register<IAdminRoleService>(
+      "adminRoleService",
+      new AdminRoleService(this.resolve("adminRoleRepository"))
+    );
+
+    this.register<IAdminUserService>(
+      "adminUserService",
+      new AdminUserService(this.resolve("adminUserRepository"))
     );
   }
 

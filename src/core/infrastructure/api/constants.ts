@@ -10,9 +10,23 @@ export const API_ENDPOINTS = {
   ROOT: "/",
 
   AUTH: {
-    LOGIN: "/api/v1/auth/login",
+    LOGIN: "/api/v1/admin/dashboard/auth/login",
   },
 
+  ADMIN_ROLES: {
+    BASE: "/api/v1/admin/dashboard/admin-roles",
+    PERMISSIONS: "/api/v1/admin/dashboard/admin-roles/permissions",
+  },
+
+  ADMIN_USERS: {
+    BASE: "/api/v1/admin/dashboard/admin-users",
+    UPDATE_ROLE: (userId: string) =>
+      `/api/v1/admin/dashboard/admin-users/${userId}/role`,
+    REMOVE_ROLE: (userId: string) =>
+      `/api/v1/admin/dashboard/admin-users/${userId}/role`,
+  },
+
+  // Legacy template stubs (kept for unused UserManagementService wiring)
   USERS: {
     BASE: "/api/v1/users",
     CREATE: "/api/v1/users",

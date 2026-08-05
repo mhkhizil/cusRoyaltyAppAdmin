@@ -1,26 +1,12 @@
 import { User } from "../entities/User";
 
 /**
- * Interface for authentication service
+ * Admin dashboard authentication service contract.
+ * Login is email + password only (not client phone login).
  */
 export interface IAuthService {
-  /**
-   * Login a user with email and password
-   */
-  login(identifier: string, password: string): Promise<User>;
-
-  /**
-   * Logout the current user
-   */
+  login(email: string, password: string): Promise<User>;
   logout(): Promise<void>;
-
-  /**
-   * Get the current authenticated user
-   */
   getCurrentUser(): Promise<User | null>;
-
-  /**
-   * Check if the user is authenticated
-   */
   isAuthenticated(): Promise<boolean>;
 }

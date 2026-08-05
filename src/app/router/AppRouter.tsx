@@ -26,9 +26,14 @@ const DashboardPage = lazy(() =>
     default: module.DashboardPage,
   }))
 );
-const UsersPage = lazy(() =>
-  import("../../pages/UsersPage").then((module) => ({
-    default: module.UsersPage,
+const AdminUsersPage = lazy(() =>
+  import("../../pages/AdminUsersPage").then((module) => ({
+    default: module.AdminUsersPage,
+  }))
+);
+const AdminRolesPage = lazy(() =>
+  import("../../pages/AdminRolesPage").then((module) => ({
+    default: module.AdminRolesPage,
   }))
 );
 const CustomersPage = lazy(() =>
@@ -149,12 +154,22 @@ export function AppRouter() {
                 }
               />
               <Route
-                path="/users"
+                path="/admin-users"
                 element={
                   <RequirePermission
-                    requiredPermissions={PAGE_PERMISSIONS.users}
+                    requiredPermissions={PAGE_PERMISSIONS.adminUsers}
                   >
-                    <UsersPage />
+                    <AdminUsersPage />
+                  </RequirePermission>
+                }
+              />
+              <Route
+                path="/admin-roles"
+                element={
+                  <RequirePermission
+                    requiredPermissions={PAGE_PERMISSIONS.adminRoles}
+                  >
+                    <AdminRolesPage />
                   </RequirePermission>
                 }
               />

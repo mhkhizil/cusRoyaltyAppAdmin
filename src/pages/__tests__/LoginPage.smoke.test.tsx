@@ -28,7 +28,7 @@ describe("LoginPage", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByLabelText("login.identifierLabel")).toBeInTheDocument();
+    expect(screen.getByLabelText("login.emailLabel")).toBeInTheDocument();
     expect(screen.getByLabelText("login.passwordLabel")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "login.submit" })).toBeInTheDocument();
   });

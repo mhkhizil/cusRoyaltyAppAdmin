@@ -3,29 +3,33 @@ import type { User } from "@/core/domain/entities/User";
 import { useAuth } from "@/core/presentation/hooks/useAuth";
 
 /**
- * Permission skeleton for route/sidebar guards.
- * Adapt role names and permission keys to your backend contract.
+ * Permission guards for admin dashboard routes/sidebar.
+ * ROOT_ADMIN (`isRootAdmin`) has full access. Staff use `permissions[]`.
  */
 const FULL_ACCESS_ROLE = "ROOT_ADMIN";
 
 export const PAGE_PERMISSIONS = {
   dashboard: [] as string[],
-  users: ["MANAGE_USERS"],
+  /** Root-admin-only RBAC management */
+  adminRoles: ["__ROOT_ADMIN__"] as string[],
+  adminUsers: ["__ROOT_ADMIN__"] as string[],
   customers: ["MANAGE_CUSTOMERS"],
 } as const;
 
 export const PERMISSION_ROUTE_ORDER = [
   { path: "/dashboard", permissions: PAGE_PERMISSIONS.dashboard },
-  { path: "/users", permissions: PAGE_PERMISSIONS.users },
+  { path: "/admin-users", permissions: PAGE_PERMISSIONS.adminUsers },
+  { path: "/admin-roles", permissions: PAGE_PERMISSIONS.adminRoles },
   { path: "/customers", permissions: PAGE_PERMISSIONS.customers },
 ] as const;
+
+const ROOT_ONLY_MARKER = "__ROOT_ADMIN__";
 
 const normalizePermission = (value: string) => value.trim().toUpperCase();
 
 const hasFullAccess = (user: User | null) =>
-  normalizePermission(String(user?.adminRoleName || user?.role || "")) ===
-    FULL_ACCESS_ROLE ||
-  normalizePermission(String(user?.role || "")) === "ADMIN";
+  user?.hasRootAccess() === true ||
+  normalizePermission(String(user?.adminRoleName || "")) === FULL_ACCESS_ROLE;
 
 const extractUserPermissions = (user: User | null): string[] => {
   if (!user || !Array.isArray(user.permissions)) return [];
@@ -46,12 +50,18 @@ export function usePermissions() {
   ).trim();
 
   const hasPermission = (requiredPermission: string) => {
+    if (requiredPermission === ROOT_ONLY_MARKER) {
+      return isFullAccess;
+    }
     if (isFullAccess) return true;
     return permissions.includes(normalizePermission(requiredPermission));
   };
 
   const canAccess = (requiredPermissions?: readonly string[]) => {
     if (!requiredPermissions || requiredPermissions.length === 0) return true;
+    if (requiredPermissions.includes(ROOT_ONLY_MARKER)) {
+      return isFullAccess;
+    }
     if (isFullAccess) return true;
     return requiredPermissions.some((permission) => hasPermission(permission));
   };

@@ -17,12 +17,15 @@ interface CookieOptions {
 /**
  * JWT Token utilities for validation and expiration checking
  */
+/** Admin JWT payload: sub, phone, authTokenVersion, iat, exp */
 interface JWTPayload {
-  sub: string; // Subject (user ID)
-  email: string;
-  role: string;
-  iat: number; // Issued at
-  exp: number; // Expires at
+  sub: string;
+  phone?: string;
+  authTokenVersion?: number;
+  email?: string;
+  role?: string;
+  iat: number;
+  exp: number;
 }
 
 /**

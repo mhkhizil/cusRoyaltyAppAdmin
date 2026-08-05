@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/core/presentation/hooks/useAuth";
 
 const inputClassName =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-900/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-white/10";
+  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-shop-ring dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-500";
 
 function EyeIcon() {
   return (
@@ -32,7 +32,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, user, isAuthenticated, isLoading, error } = useAuth();
-  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -49,7 +49,7 @@ export function LoginPage() {
     setLocalError(null);
 
     try {
-      await login(identifier.trim(), password);
+      await login(email.trim(), password);
       navigate(from || "/dashboard", { replace: true });
     } catch (err) {
       const message =
@@ -60,9 +60,9 @@ export function LoginPage() {
 
   return (
     <section className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10 dark:bg-slate-950">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 dark:border-slate-800 dark:bg-slate-900">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-lg font-bold text-white dark:bg-white dark:text-slate-900">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-shop-primary text-lg font-bold text-shop-primary-foreground">
             {t("shell.brandTitle").slice(0, 1)}
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
@@ -77,18 +77,19 @@ export function LoginPage() {
           <div>
             <label
               className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
-              htmlFor="identifier"
+              htmlFor="email"
             >
-              {t("login.identifierLabel")}
+              {t("login.emailLabel")}
             </label>
             <input
-              id="identifier"
+              id="email"
               className={inputClassName}
-              type="text"
-              autoComplete="username"
-              placeholder={t("login.identifierPlaceholder")}
-              value={identifier}
-              onChange={(event) => setIdentifier(event.target.value)}
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              placeholder={t("login.emailPlaceholder")}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               required
             />
           </div>
@@ -110,6 +111,7 @@ export function LoginPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
+                minLength={8}
               />
               <button
                 type="button"

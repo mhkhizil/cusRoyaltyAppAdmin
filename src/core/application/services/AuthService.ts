@@ -2,9 +2,10 @@ import { User } from "../../domain/entities/User";
 import { IAuthService } from "../../domain/services/IAuthService";
 import { ApiAuthRepository } from "../../infrastructure/repositories/ApiAuthRepository";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 /**
- * Auth Service implementation
- * Contains business logic for authentication-related operations
+ * Auth Service — admin dashboard login orchestration.
  */
 export class AuthService implements IAuthService {
   private authRepository: ApiAuthRepository;
@@ -13,16 +14,19 @@ export class AuthService implements IAuthService {
     this.authRepository = authRepository;
   }
 
-  /**
-   * Login a user with email and password
-   */
-  async login(identifier: string, password: string): Promise<User> {
-    if (!identifier || !password) {
-      throw new Error("Phone/email and password are required");
+  async login(email: string, password: string): Promise<User> {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail || !password) {
+      throw new Error("Email and password are required");
+    }
+
+    if (!EMAIL_REGEX.test(normalizedEmail)) {
+      throw new Error("Enter a valid admin email address");
     }
 
     try {
-      const result = await this.authRepository.login(identifier, password);
+      const result = await this.authRepository.login(normalizedEmail, password);
       return result.user;
     } catch (error: unknown) {
       console.error("Login failed:", error);
@@ -33,9 +37,6 @@ export class AuthService implements IAuthService {
     }
   }
 
-  /**
-   * Logout the current user
-   */
   async logout(): Promise<void> {
     try {
       await this.authRepository.logout();
@@ -44,9 +45,6 @@ export class AuthService implements IAuthService {
     }
   }
 
-  /**
-   * Get the current authenticated user
-   */
   async getCurrentUser(): Promise<User | null> {
     try {
       return await this.authRepository.getCurrentUser();
@@ -56,9 +54,6 @@ export class AuthService implements IAuthService {
     }
   }
 
-  /**
-   * Check if the user is authenticated
-   */
   async isAuthenticated(): Promise<boolean> {
     const user = await this.getCurrentUser();
     return !!user;

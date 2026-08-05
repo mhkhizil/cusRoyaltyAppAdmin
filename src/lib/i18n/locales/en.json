@@ -24,32 +24,34 @@
     "offlineBadge": "Offline"
   },
   "shell": {
-    "brandTitle": "App",
-    "brandSubtitle": "Frontend template",
+    "brandTitle": "Customer Royalty",
+    "brandSubtitle": "Admin dashboard",
     "mainMenu": "Main menu",
     "workspace": "Workspace",
-    "workspaceTitle": "Getting started",
-    "workspaceText": "Use Users and Customers as architecture examples, then replace them with your features.",
+    "workspaceTitle": "Admin access",
+    "workspaceText": "Root admins manage roles and staff. Staff access depends on assigned permissions.",
     "appVersion": "v{{version}}",
     "dashboardTitle": "Dashboard",
     "dashboardMeta": "Overview",
-    "usersTitle": "Users",
-    "usersMeta": "Example list",
+    "adminUsersTitle": "Admin users",
+    "adminUsersMeta": "Staff RBAC",
+    "adminRolesTitle": "Admin roles",
+    "adminRolesMeta": "Permissions",
     "customersTitle": "Customers",
     "customersMeta": "Example CRUD",
     "topbarTitle": "Workspace",
-    "topbarSubtitle": "Authenticated app shell",
+    "topbarSubtitle": "Secured admin session",
     "signedInAs": "Signed in as",
-    "fullAccessRole": "Full access",
-    "userRole": "User",
-    "userFallback": "User",
+    "fullAccessRole": "Root admin",
+    "userRole": "Staff admin",
+    "userFallback": "Admin",
     "logout": "Log out"
   },
   "login": {
-    "title": "Sign in",
-    "subtitle": "Use your account credentials to continue.",
-    "identifierLabel": "Email or username",
-    "identifierPlaceholder": "you@example.com",
+    "title": "Admin sign in",
+    "subtitle": "Sign in with your admin email and password.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "admin@example.com",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Enter password",
     "showPassword": "Show password",
@@ -60,27 +62,73 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "description": "Neutral starter home. Replace this page with your product overview.",
-    "usersCard": "Users",
-    "customersCard": "Customers",
+    "description": "Customer Royalty admin overview.",
+    "adminUsersCard": "Admin users",
+    "adminRolesCard": "Admin roles",
     "exampleValue": "—",
-    "usersHint": "Example resource via useUserManagement",
-    "customersHint": "Example resource via useCustomerManagement",
-    "nextStepsTitle": "Next steps",
-    "nextStepsText": "Explore the example pages, then add your own feature using architecture.md.",
-    "openUsers": "Open users",
-    "openCustomers": "Open customers"
+    "adminUsersHint": "Create and manage staff admins",
+    "adminRolesHint": "Define permission sets for staff",
+    "nextStepsTitle": "RBAC management",
+    "nextStepsText": "Root admins can manage roles and staff accounts from here.",
+    "openAdminUsers": "Open admin users",
+    "openAdminRoles": "Open admin roles"
   },
-  "users": {
-    "title": "Users",
-    "description": "Thin example list page wired through core layers.",
-    "loading": "Loading users...",
-    "empty": "No users found. Point USERS endpoints at your backend to populate this list.",
-    "total": "{{count}} users",
+  "adminRoles": {
+    "title": "Admin roles",
+    "description": "Create permission sets for staff admins. Root-admin only.",
+    "createTitle": "Create role",
+    "createSubmit": "Create role",
+    "createError": "Unable to create role",
+    "loading": "Loading roles...",
+    "empty": "No roles found.",
+    "total": "{{count}} roles",
+    "permissionsEmpty": "No permissions available from the API yet.",
+    "systemYes": "System",
+    "systemNo": "Custom",
+    "fields": {
+      "name": "Role name (e.g. CONTENT_MODERATOR)",
+      "description": "Description",
+      "permissions": "Permissions"
+    },
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "permissions": "Permissions",
+      "system": "Type"
+    }
+  },
+  "adminUsers": {
+    "title": "Admin users",
+    "description": "Create staff admins and assign roles. Root-admin only.",
+    "createTitle": "Create admin user",
+    "createSubmit": "Create admin",
+    "createError": "Unable to create admin user",
+    "loading": "Loading admin users...",
+    "empty": "No admin users found.",
+    "total": "{{count}} admin users",
+    "fields": {
+      "nickname": "Nickname",
+      "phone": "Phone",
+      "email": "Email",
+      "password": "Password (min 8)",
+      "role": "Select role"
+    },
     "columns": {
       "name": "Name",
       "email": "Email",
-      "role": "Role"
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "banned": "Banned"
+    },
+    "actions": {
+      "updateRole": "Update role",
+      "demote": "Demote"
     }
   },
   "customers": {

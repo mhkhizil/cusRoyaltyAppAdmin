@@ -36,6 +36,11 @@ const AdminRolesPage = lazy(() =>
     default: module.AdminRolesPage,
   }))
 );
+const PointsPage = lazy(() =>
+  import("../../pages/PointsPage").then((module) => ({
+    default: module.PointsPage,
+  }))
+);
 const CustomersPage = lazy(() =>
   import("../../pages/CustomersPage").then((module) => ({
     default: module.CustomersPage,
@@ -150,6 +155,16 @@ export function AppRouter() {
                     requiredPermissions={PAGE_PERMISSIONS.dashboard}
                   >
                     <DashboardPage />
+                  </RequirePermission>
+                }
+              />
+              <Route
+                path="/points"
+                element={
+                  <RequirePermission
+                    requiredPermissions={PAGE_PERMISSIONS.points}
+                  >
+                    <PointsPage />
                   </RequirePermission>
                 }
               />

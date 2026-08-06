@@ -26,6 +26,15 @@ export const API_ENDPOINTS = {
       `/api/v1/admin/dashboard/admin-users/${userId}/role`,
   },
 
+  POINTS: {
+    QR_SCAN: "/api/v1/admin/dashboard/points/qr-scan",
+    RULES: "/api/v1/admin/dashboard/points/rules",
+  },
+
+  OPS: {
+    BRANCHES: "/api/v1/admin/dashboard/ops/branches",
+  },
+
   // Legacy template stubs (kept for unused UserManagementService wiring)
   USERS: {
     BASE: "/api/v1/users",

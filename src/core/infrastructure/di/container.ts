@@ -8,16 +8,24 @@ import { IAdminRoleRepository } from "../../domain/repositories/IAdminRoleReposi
 import { ApiAdminRoleRepository } from "../repositories/ApiAdminRoleRepository";
 import { IAdminUserRepository } from "../../domain/repositories/IAdminUserRepository";
 import { ApiAdminUserRepository } from "../repositories/ApiAdminUserRepository";
+import { IPointsRepository } from "../../domain/repositories/IPointsRepository";
+import { ApiPointsRepository } from "../repositories/ApiPointsRepository";
+import { IBranchRepository } from "../../domain/repositories/IBranchRepository";
+import { ApiBranchRepository } from "../repositories/ApiBranchRepository";
 import { IAuthService } from "../../domain/services/IAuthService";
 import { AuthService } from "../../application/services/AuthService";
 import { UserManagementService } from "../../application/services/UserManagementService";
 import { CustomerManagementService } from "../../application/services/CustomerManagementService";
 import { AdminRoleService } from "../../application/services/AdminRoleService";
 import { AdminUserService } from "../../application/services/AdminUserService";
+import { PointsService } from "../../application/services/PointsService";
+import { BranchService } from "../../application/services/BranchService";
 import { ICustomerService } from "../../domain/services/ICustomerService";
 import { IUserService } from "../../domain/services/IUserService";
 import { IAdminRoleService } from "../../domain/services/IAdminRoleService";
 import { IAdminUserService } from "../../domain/services/IAdminUserService";
+import { IPointsService } from "../../domain/services/IPointsService";
+import { IBranchService } from "../../domain/services/IBranchService";
 
 /**
  * Dependency Injection Container
@@ -58,6 +66,16 @@ class Container {
       new ApiAdminUserRepository(this.resolve("httpClient"))
     );
 
+    this.register<IPointsRepository>(
+      "pointsRepository",
+      new ApiPointsRepository(this.resolve("httpClient"))
+    );
+
+    this.register<IBranchRepository>(
+      "branchRepository",
+      new ApiBranchRepository(this.resolve("httpClient"))
+    );
+
     this.register<IAuthService>(
       "authService",
       new AuthService(this.resolve("authRepository"))
@@ -81,6 +99,16 @@ class Container {
     this.register<IAdminUserService>(
       "adminUserService",
       new AdminUserService(this.resolve("adminUserRepository"))
+    );
+
+    this.register<IPointsService>(
+      "pointsService",
+      new PointsService(this.resolve("pointsRepository"))
+    );
+
+    this.register<IBranchService>(
+      "branchService",
+      new BranchService(this.resolve("branchRepository"))
     );
   }
 

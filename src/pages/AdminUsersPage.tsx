@@ -9,6 +9,9 @@ import { useAdminUserManagement } from "@/core/presentation/hooks/useAdminUserMa
 const inputClassName =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-shop-ring dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
 
+const tableSelectClassName =
+  "min-w-[9rem] max-w-[12rem] rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
+
 export function AdminUsersPage() {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
@@ -84,17 +87,22 @@ export function AdminUsersPage() {
   };
 
   return (
-    <section className="mx-auto max-w-6xl space-y-6">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+    <section className="mx-auto max-w-6xl space-y-4 sm:space-y-6">
+      <header className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-4">
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-white">
             {t("adminUsers.title")}
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             {t("adminUsers.description")}
           </p>
         </div>
-        <Button variant="secondary" isLoading={isLoading} onClick={refresh}>
+        <Button
+          variant="secondary"
+          isLoading={isLoading}
+          className="w-full sm:w-auto"
+          onClick={refresh}
+        >
           {isLoading ? t("common.refreshing") : t("common.refresh")}
         </Button>
       </header>
@@ -182,25 +190,25 @@ export function AdminUsersPage() {
             {t("adminUsers.total", { count: adminUsers.length })}
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
+            <table className="min-w-[44rem] w-full text-left text-sm md:min-w-full">
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-950/50 dark:text-slate-400">
                 <tr>
-                  <th className="px-4 py-3 font-semibold">
+                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("adminUsers.columns.name")}
                   </th>
-                  <th className="px-4 py-3 font-semibold">
+                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("adminUsers.columns.email")}
                   </th>
-                  <th className="px-4 py-3 font-semibold">
+                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("adminUsers.columns.phone")}
                   </th>
-                  <th className="px-4 py-3 font-semibold">
+                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("adminUsers.columns.role")}
                   </th>
-                  <th className="px-4 py-3 font-semibold">
+                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("adminUsers.columns.status")}
                   </th>
-                  <th className="px-4 py-3 font-semibold">
+                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("adminUsers.columns.actions")}
                   </th>
                 </tr>
@@ -219,15 +227,19 @@ export function AdminUsersPage() {
                       key={adminUser.id}
                       className="text-slate-700 dark:text-slate-200"
                     >
-                      <td className="px-4 py-3">{adminUser.nickname}</td>
-                      <td className="px-4 py-3">{adminUser.email || "—"}</td>
-                      <td className="px-4 py-3">{adminUser.phone}</td>
-                      <td className="px-4 py-3">
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        {adminUser.nickname}
+                      </td>
+                      <td className="px-3 py-3 sm:px-4">{adminUser.email || "—"}</td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        {adminUser.phone}
+                      </td>
+                      <td className="px-3 py-3 sm:px-4">
                         {isRoot || isSelf ? (
                           adminUser.adminRoleName || adminUser.role
                         ) : (
                           <select
-                            className={inputClassName}
+                            className={tableSelectClassName}
                             value={draftRole}
                             onChange={(event) =>
                               setRowRoleDrafts((prev) => ({

@@ -33,6 +33,8 @@
     "appVersion": "v{{version}}",
     "dashboardTitle": "Dashboard",
     "dashboardMeta": "Overview",
+    "pointsTitle": "Points",
+    "pointsMeta": "QR & rules",
     "adminUsersTitle": "Admin users",
     "adminUsersMeta": "Staff RBAC",
     "adminRolesTitle": "Admin roles",
@@ -45,7 +47,11 @@
     "fullAccessRole": "Root admin",
     "userRole": "Staff admin",
     "userFallback": "Admin",
-    "logout": "Log out"
+    "logout": "Log out",
+    "logoutShort": "Out",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "toggleSidebar": "Collapse or expand sidebar"
   },
   "login": {
     "title": "Admin sign in",
@@ -72,6 +78,75 @@
     "nextStepsText": "Root admins can manage roles and staff accounts from here.",
     "openAdminUsers": "Open admin users",
     "openAdminRoles": "Open admin roles"
+  },
+  "points": {
+    "title": "Points",
+    "description": "Scan customer QR codes and manage point award rules.",
+    "scan": {
+      "title": "QR scan",
+      "subtitle": "Enter the purchase amount, then scan the customer QR with the camera.",
+      "submit": "Process scan",
+      "error": "Unable to process QR scan",
+      "invalidAmount": "Enter a valid purchase amount before scanning",
+      "resultTitle": "Scan successful",
+      "startCamera": "Start camera",
+      "stopCamera": "Stop camera",
+      "cameraIdle": "Camera is off. Start it to scan a customer QR code.",
+      "cameraHint": "Point the camera at the customer QR. Points are awarded automatically when a code is detected.",
+      "cameraError": "Unable to access the camera. Allow camera permission and try again.",
+      "processing": "Processing QR scan...",
+      "fields": {
+        "qrToken": "Customer QR token",
+        "purchaseAmount": "Purchase amount",
+        "locationId": "Branch / location",
+        "locationPlaceholder": "All branches (optional)",
+        "purchaseId": "Purchase ID (optional)"
+      },
+      "result": {
+        "pointsAwarded": "Points awarded",
+        "customerId": "Customer",
+        "payableAmount": "Payable",
+        "tierName": "Tier",
+        "tierUpgraded": "upgraded",
+        "badges": "Badges"
+      }
+    },
+    "branches": {
+      "loading": "Loading branches...",
+      "empty": "No branches available."
+    },
+    "rules": {
+      "createTitle": "Create point rule",
+      "createSubmit": "Create rule",
+      "createError": "Unable to create point rule",
+      "loading": "Loading point rules...",
+      "empty": "No point rules yet. Create one above.",
+      "total": "{{count}} rules",
+      "calculation": {
+        "flat": "Flat points",
+        "spendBased": "Spend-based"
+      },
+      "fields": {
+        "name": "Rule name",
+        "description": "Description",
+        "flatPoints": "Flat points",
+        "spendUnit": "Spend unit",
+        "pointsPerSpendUnit": "Points per spend unit",
+        "minimumPurchase": "Minimum purchase",
+        "maximumPointsPerScan": "Max points per scan",
+        "priority": "Priority",
+        "locationIds": "Branches (optional)",
+        "startsAt": "Starts at",
+        "endsAt": "Ends at"
+      },
+      "columns": {
+        "name": "Name",
+        "type": "Type",
+        "points": "Points",
+        "minimum": "Min purchase",
+        "window": "Active window"
+      }
+    }
   },
   "adminRoles": {
     "title": "Admin roles",

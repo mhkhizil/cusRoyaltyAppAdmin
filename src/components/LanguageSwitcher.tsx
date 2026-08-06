@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const LANGUAGE_OPTIONS = [
-  { value: "en", labelKey: "language.english" },
-  { value: "ko", labelKey: "language.korean" },
-  { value: "my", labelKey: "language.myanmar" },
-  { value: "zh-CN", labelKey: "language.chineseSimplified" },
+  { value: "en", labelKey: "language.english", shortLabel: "EN" },
+  { value: "ko", labelKey: "language.korean", shortLabel: "KO" },
+  { value: "my", labelKey: "language.myanmar", shortLabel: "MY" },
+  { value: "zh-CN", labelKey: "language.chineseSimplified", shortLabel: "ZH" },
 ] as const;
 
 function resolveSelectedLanguage(language?: string) {
@@ -37,9 +37,9 @@ export function LanguageSwitcher() {
     i18n.resolvedLanguage ?? i18n.language
   );
 
-  const currentLabel =
-    LANGUAGE_OPTIONS.find((opt) => opt.value === currentValue)?.labelKey ??
-    "language.english";
+  const currentOption =
+    LANGUAGE_OPTIONS.find((opt) => opt.value === currentValue) ??
+    LANGUAGE_OPTIONS[0];
 
   const handleSelect = (value: string) => {
     void i18n.changeLanguage(value);
@@ -70,13 +70,14 @@ export function LanguageSwitcher() {
       <span className="sr-only">{t("language.switchLanguage")}</span>
       <button
         type="button"
-        className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:gap-2 sm:px-3 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
         aria-label={t("language.switchLanguage")}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span>{t(currentLabel)}</span>
+        <span className="sm:hidden">{currentOption.shortLabel}</span>
+        <span className="hidden sm:inline">{t(currentOption.labelKey)}</span>
         <ChevronDownIcon />
       </button>
 

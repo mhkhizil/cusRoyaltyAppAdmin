@@ -17,6 +17,7 @@ interface UsePointsManagementReturn {
   isScanLocationsLoading: boolean;
   error: string | null;
   loadRules: () => Promise<void>;
+  loadRuleById: (ruleId: string) => Promise<PointRule>;
   loadScanLocations: () => Promise<void>;
   createRule: (payload: CreatePointRuleDTO) => Promise<PointRule>;
   scanQr: (payload: QrScanRequestDTO) => Promise<QrScanResult>;
@@ -57,6 +58,14 @@ export function usePointsManagement(): UsePointsManagementReturn {
       setIsLoading(false);
     }
   }, [clearError, pointsService]);
+
+  const loadRuleById = useCallback(
+    async (ruleId: string) => {
+      clearError();
+      return pointsService.getRuleById(ruleId);
+    },
+    [clearError, pointsService]
+  );
 
   const loadScanLocations = useCallback(async () => {
     try {
@@ -121,6 +130,7 @@ export function usePointsManagement(): UsePointsManagementReturn {
     isScanLocationsLoading,
     error,
     loadRules,
+    loadRuleById,
     loadScanLocations,
     createRule,
     scanQr,

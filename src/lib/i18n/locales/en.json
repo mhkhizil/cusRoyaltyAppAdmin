@@ -175,7 +175,23 @@
         "maxPerScan": "Max / scan",
         "dailyCap": "Daily cap",
         "branches": "Branches",
-        "window": "Active window"
+        "window": "Active window",
+        "actions": "Actions"
+      },
+      "actions": {
+        "viewDetails": "View details",
+        "hideDetails": "Hide details"
+      },
+      "details": {
+        "title": "Rule details",
+        "subtitle": "Full rule configuration from the API.",
+        "apiStatus": "Rule status",
+        "loading": "Loading rule details...",
+        "loadError": "Unable to load point rule",
+        "notFound": "Point rule not found",
+        "backToPoints": "Back to points",
+        "createdAt": "Created",
+        "updatedAt": "Updated"
       },
       "status": {
         "active": "Active",

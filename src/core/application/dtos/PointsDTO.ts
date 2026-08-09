@@ -62,6 +62,8 @@ export interface PointRuleResponseDTO {
   status?: string | null;
   startsAt?: string | null;
   endsAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
   /** Present on some create responses in OpenAPI examples */
   pointsAwarded?: number;
   recipients?: number;
@@ -94,6 +96,8 @@ export class PointsDTOMapper {
       status: nullableString(dto.status),
       startsAt: nullableString(dto.startsAt),
       endsAt: nullableString(dto.endsAt),
+      createdAt: nullableString(dto.createdAt),
+      updatedAt: nullableString(dto.updatedAt),
     });
   }
 

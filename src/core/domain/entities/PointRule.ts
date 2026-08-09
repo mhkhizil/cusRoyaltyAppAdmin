@@ -34,6 +34,8 @@ export interface PointRuleData {
   status: string | null;
   startsAt: string | null;
   endsAt: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
 }
 
 /**
@@ -55,6 +57,8 @@ export class PointRule {
   public status: string | null;
   public startsAt: string | null;
   public endsAt: string | null;
+  public createdAt: string | null;
+  public updatedAt: string | null;
 
   constructor(data: PointRuleData) {
     this.id = data.id;
@@ -72,6 +76,8 @@ export class PointRule {
     this.status = data.status;
     this.startsAt = data.startsAt;
     this.endsAt = data.endsAt;
+    this.createdAt = data.createdAt;
+    this.updatedAt = data.updatedAt;
   }
 
   isFlat(): boolean {
@@ -115,7 +121,8 @@ export class PointRule {
     if (
       apiStatus === "INACTIVE" ||
       apiStatus === "DISABLED" ||
-      apiStatus === "ARCHIVED"
+      apiStatus === "ARCHIVED" ||
+      apiStatus === "DRAFT"
     ) {
       return "INACTIVE";
     }

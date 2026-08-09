@@ -10,5 +10,6 @@ export interface IPointsRepository {
   scanQr(payload: QrScanRequestDTO): Promise<QrScanResult>;
   listScanLocations(): Promise<Branch[]>;
   listRules(): Promise<PointRule[]>;
+  getRuleById(ruleId: string): Promise<PointRule>;
   createRule(payload: CreatePointRuleDTO): Promise<PointRule>;
 }

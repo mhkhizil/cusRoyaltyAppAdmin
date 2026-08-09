@@ -1,5 +1,6 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { ApiLoadingState } from "@/components/ApiLoadingState";
 import { Button } from "@/components/ui/Button";
 import { QrScanner } from "@/components/QrScanner";
@@ -682,7 +683,7 @@ export function PointsPage() {
             </p>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-[72rem] w-full text-left text-sm">
+            <table className="min-w-[48rem] w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-950/50 dark:text-slate-400">
                 <tr>
                   <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
@@ -698,22 +699,16 @@ export function PointsPage() {
                     {t("points.rules.columns.points")}
                   </th>
                   <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
-                    {t("points.rules.columns.priority")}
-                  </th>
-                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("points.rules.columns.minimum")}
-                  </th>
-                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
-                    {t("points.rules.columns.maxPerScan")}
-                  </th>
-                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
-                    {t("points.rules.columns.dailyCap")}
                   </th>
                   <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("points.rules.columns.branches")}
                   </th>
                   <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
                     {t("points.rules.columns.window")}
+                  </th>
+                  <th className="whitespace-nowrap px-3 py-3 font-semibold sm:px-4">
+                    {t("points.rules.columns.actions")}
                   </th>
                 </tr>
               </thead>
@@ -741,16 +736,7 @@ export function PointsPage() {
                         {rule.formatPointsSummary()}
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 sm:px-4">
-                        {rule.priority ?? "—"}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
                         {rule.minimumPurchase ?? "—"}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
-                        {rule.maximumPointsPerScan ?? "—"}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
-                        {rule.dailyUserPointCap ?? "—"}
                       </td>
                       <td className="max-w-[14rem] px-3 py-3 sm:px-4">
                         <span className="line-clamp-2" title={formatRuleScope(rule)}>
@@ -764,6 +750,13 @@ export function PointsPage() {
                             {formatDate(rule.endsAt)}
                           </div>
                         </div>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        <Link to={`/points/rules/${rule.id}`}>
+                          <Button size="sm" variant="secondary">
+                            {t("points.rules.actions.viewDetails")}
+                          </Button>
+                        </Link>
                       </td>
                     </tr>
                   );

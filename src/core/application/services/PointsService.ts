@@ -54,6 +54,14 @@ export class PointsService implements IPointsService {
     return this.pointsRepository.listRules();
   }
 
+  async getRuleById(ruleId: string): Promise<PointRule> {
+    const id = ruleId.trim();
+    if (!id) {
+      throw new Error("Rule id is required");
+    }
+    return this.pointsRepository.getRuleById(id);
+  }
+
   async createRule(payload: CreatePointRuleDTO): Promise<PointRule> {
     const name = payload.name.trim();
     const calculationType = String(payload.calculationType || "")

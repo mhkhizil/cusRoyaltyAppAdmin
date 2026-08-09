@@ -77,6 +77,22 @@ export class ApiPointsRepository implements IPointsRepository {
     }
   }
 
+  async getRuleById(ruleId: string): Promise<PointRule> {
+    try {
+      const response = await this.httpClient.get<
+        ApiEnvelopeDTO<PointRuleResponseDTO>
+      >(API_ENDPOINTS.POINTS.RULE_BY_ID(ruleId));
+
+      if (response.success === false || !response.data) {
+        throw new Error(response.message || "Failed to load point rule");
+      }
+
+      return PointsDTOMapper.toPointRuleDomain(response.data);
+    } catch (error) {
+      throw new Error(extractErrorMessage(error, "Failed to load point rule"));
+    }
+  }
+
   async createRule(payload: CreatePointRuleDTO): Promise<PointRule> {
     try {
       const response = await this.httpClient.post<

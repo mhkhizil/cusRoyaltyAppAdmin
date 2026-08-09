@@ -29,6 +29,8 @@ export const API_ENDPOINTS = {
   POINTS: {
     QR_SCAN: "/api/v1/admin/dashboard/points/qr-scan",
     RULES: "/api/v1/admin/dashboard/points/rules",
+    RULE_BY_ID: (ruleId: string) =>
+      `/api/v1/admin/dashboard/points/rules/${ruleId}`,
     SCAN_LOCATIONS: "/api/v1/admin/dashboard/points/scan-locations",
   },
 

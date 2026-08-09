@@ -175,7 +175,23 @@
         "maxPerScan": "Max / scan",
         "dailyCap": "Daily cap",
         "branches": "Branches",
-        "window": "Active window"
+        "window": "Active window",
+        "actions": "Actions"
+      },
+      "actions": {
+        "viewDetails": "အသေးစိတ်ကြည့်ရန်",
+        "hideDetails": "ပိတ်ရန်"
+      },
+      "details": {
+        "title": "Rule အသေးစိတ်",
+        "subtitle": "API မှ rule configuration အပြည့်အစုံ။",
+        "apiStatus": "Rule status",
+        "loading": "Rule အသေးစိတ် ဖွင့်နေသည်...",
+        "loadError": "Point rule ဖွင့်၍ မရပါ",
+        "notFound": "Point rule မတွေ့ပါ",
+        "backToPoints": "Points သို့ ပြန်သွားရန်",
+        "createdAt": "Created",
+        "updatedAt": "Updated"
       },
       "status": {
         "active": "Active",

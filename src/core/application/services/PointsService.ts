@@ -42,6 +42,7 @@ export class PointsService implements IPointsService {
       qrToken,
       purchaseAmount: payload.purchaseAmount,
       locationId,
+      ruleId: payload.ruleId?.trim() || undefined,
       purchaseId: payload.purchaseId?.trim() || undefined,
     });
   }

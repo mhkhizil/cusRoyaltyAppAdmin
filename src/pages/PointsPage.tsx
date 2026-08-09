@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ApiLoadingState } from "@/components/ApiLoadingState";
 import { Button } from "@/components/ui/Button";
-import { QrScanner } from "@/components/QrScanner";
+import { QrScanner, type QrScannerHandle } from "@/components/QrScanner";
 import { usePointsManagement } from "@/core/presentation/hooks/usePointsManagement";
 import { useBranchManagement } from "@/core/presentation/hooks/useBranchManagement";
 import {
@@ -67,14 +67,17 @@ export function PointsPage() {
 
   const [purchaseAmount, setPurchaseAmount] = useState("");
   const [locationId, setLocationId] = useState("");
+  const [overrideRuleId, setOverrideRuleId] = useState("");
   const [purchaseId, setPurchaseId] = useState("");
   const [scanError, setScanError] = useState<string | null>(null);
   const [isProcessingScan, setIsProcessingScan] = useState(false);
   const scanFormRef = useRef({
     purchaseAmount: "",
     locationId: "",
+    overrideRuleId: "",
     purchaseId: "",
   });
+  const qrScannerRef = useRef<QrScannerHandle>(null);
 
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
@@ -98,9 +101,10 @@ export function PointsPage() {
     scanFormRef.current = {
       purchaseAmount,
       locationId,
+      overrideRuleId,
       purchaseId,
     };
-  }, [purchaseAmount, locationId, purchaseId]);
+  }, [purchaseAmount, locationId, overrideRuleId, purchaseId]);
 
   const refresh = () => {
     clearError();
@@ -181,8 +185,10 @@ export function PointsPage() {
           qrToken: decodedToken,
           purchaseAmount: amount,
           locationId: branchId,
+          ruleId: form.overrideRuleId.trim() || undefined,
           purchaseId: form.purchaseId.trim() || undefined,
         });
+        await qrScannerRef.current?.stopCamera();
         setPurchaseAmount("");
         setPurchaseId("");
       } catch (err) {
@@ -342,6 +348,28 @@ export function PointsPage() {
                 {t("points.scanLocations.empty")}
               </p>
             ) : null}
+            <select
+              className={inputClassName}
+              value={overrideRuleId}
+              onChange={(event) => setOverrideRuleId(event.target.value)}
+              aria-label={t("points.scan.fields.overrideRule")}
+            >
+              <option value="">{t("points.scan.fields.overrideRuleAuto")}</option>
+              {rules.map((rule) => (
+                <option key={rule.id} value={rule.id}>
+                  {rule.name || rule.id} — {rule.formatPointsSummary()}
+                </option>
+              ))}
+            </select>
+            {rules.length === 0 && !isLoading ? (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t("points.scan.fields.overrideRuleEmpty")}
+              </p>
+            ) : (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t("points.scan.fields.overrideRuleHint")}
+              </p>
+            )}
             <input
               className={inputClassName}
               placeholder={t("points.scan.fields.purchaseId")}
@@ -354,6 +382,7 @@ export function PointsPage() {
             </p>
 
             <QrScanner
+              ref={qrScannerRef}
               onScan={(token) => {
                 void handleQrDetected(token);
               }}

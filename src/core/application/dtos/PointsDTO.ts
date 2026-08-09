@@ -11,6 +11,7 @@ export interface QrScanRequestDTO {
   qrToken: string;
   purchaseAmount: number;
   locationId: string;
+  ruleId?: string;
   purchaseId?: string;
 }
 

@@ -109,6 +109,10 @@
         "purchaseAmount": "Purchase amount",
         "locationId": "Branch / location",
         "locationPlaceholder": "Select branch",
+        "overrideRule": "Override point rule",
+        "overrideRuleAuto": "Auto-select best rule",
+        "overrideRuleHint": "Leave on auto-select unless staff must force a specific active rule for this scan.",
+        "overrideRuleEmpty": "No rules loaded yet. Auto-select will apply when rules exist.",
         "purchaseId": "Purchase ID (optional)"
       },
       "result": {

@@ -109,6 +109,10 @@
         "purchaseAmount": "Purchase amount",
         "locationId": "Branch / location",
         "locationPlaceholder": "Branch ရွေးချယ်ပါ",
+        "overrideRule": "Point rule override",
+        "overrideRuleAuto": "Auto-select best rule",
+        "overrideRuleHint": "Staff က rule တစ်ခုကို force မလုပ်ရင် auto-select ထားပါ။",
+        "overrideRuleEmpty": "Rule မရှိသေးပါ။ Rule ရှိလာရင် auto-select သုံးမည်။",
         "purchaseId": "Purchase ID (optional)"
       },
       "result": {

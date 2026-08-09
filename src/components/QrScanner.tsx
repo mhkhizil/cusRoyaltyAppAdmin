@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Html5Qrcode, type Html5QrcodeCameraScanConfig } from "html5-qrcode";
 import { Button } from "@/components/ui/Button";
@@ -10,15 +10,16 @@ type QrScannerProps = {
   className?: string;
 };
 
+export type QrScannerHandle = {
+  stopCamera: () => Promise<void>;
+};
+
 /**
  * Camera QR scanner for admin dashboard point awards.
  * Uses the device camera via html5-qrcode.
  */
-export function QrScanner({
-  onScan,
-  paused = false,
-  className = "",
-}: QrScannerProps) {
+export const QrScanner = forwardRef<QrScannerHandle, QrScannerProps>(
+  function QrScanner({ onScan, paused = false, className = "" }, ref) {
   const { t } = useTranslation();
   const reactId = useId();
   const elementId = `qr-reader-${reactId.replace(/:/g, "")}`;
@@ -75,6 +76,10 @@ export function QrScanner({
       lastDecodedRef.current = null;
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    stopCamera: stopScanner,
+  }));
 
   const startScanner = async () => {
     if (isStarting || isRunning) return;
@@ -171,4 +176,4 @@ export function QrScanner({
       </div>
     </div>
   );
-}
+});

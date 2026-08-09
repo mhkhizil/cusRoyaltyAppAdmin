@@ -22,13 +22,14 @@ export const API_ENDPOINTS = {
     BASE: "/api/v1/admin/dashboard/admin-users",
     UPDATE_ROLE: (userId: string) =>
       `/api/v1/admin/dashboard/admin-users/${userId}/role`,
-    REMOVE_ROLE: (userId: string) =>
+    REVOKE_ACCESS: (userId: string) =>
       `/api/v1/admin/dashboard/admin-users/${userId}/role`,
   },
 
   POINTS: {
     QR_SCAN: "/api/v1/admin/dashboard/points/qr-scan",
     RULES: "/api/v1/admin/dashboard/points/rules",
+    SCAN_LOCATIONS: "/api/v1/admin/dashboard/points/scan-locations",
   },
 
   OPS: {

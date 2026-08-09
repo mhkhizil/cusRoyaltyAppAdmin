@@ -47,4 +47,18 @@ export class QrScanResult {
     this.tierName = data.tierName;
     this.tierUpgraded = data.tierUpgraded;
   }
+
+  hasNoMatchingRule(): boolean {
+    return this.pointsAwarded === 0 && !this.ruleId;
+  }
+
+  hasCampaignDiscount(): boolean {
+    return this.discountAmount > 0;
+  }
+
+  formatCampaignLabel(): string | null {
+    if (this.campaignName?.trim()) return this.campaignName.trim();
+    if (this.campaignId?.trim()) return this.campaignId.trim();
+    return null;
+  }
 }

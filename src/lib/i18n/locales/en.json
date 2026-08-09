@@ -5,13 +5,13 @@
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "noDataAvailable": "No data available",
+    "clearSearch": "Clear search"
   },
   "language": {
     "english": "English",
-    "korean": "한국어",
     "myanmar": "မြန်မာ",
-    "chineseSimplified": "简体中文",
     "switchLanguage": "Switch language"
   },
   "theme": {
@@ -81,35 +81,57 @@
   },
   "points": {
     "title": "Points",
-    "description": "Scan customer QR codes and manage point award rules.",
+    "description": "Rule-driven checkout: configure how points are awarded, then scan customer QR codes at the counter.",
+    "guidance": {
+      "title": "How admin points work",
+      "rulesDrivePoints": "Point rules control all awards — there is no hardcoded formula on scan.",
+      "payableAmount": "Points are calculated on the payable amount after campaign discounts, not the raw bill.",
+      "customerQr": "Customers must rotate their QR in the app and show the latest token at checkout.",
+      "noRuleZeroPoints": "If no active rule matches, the scan still succeeds but pointsAwarded is 0."
+    },
     "scan": {
       "title": "QR scan",
-      "subtitle": "Enter the purchase amount, then scan the customer QR with the camera.",
+      "subtitle": "Select the checkout branch, enter the purchase amount, then scan the customer QR with the camera.",
       "submit": "Process scan",
       "error": "Unable to process QR scan",
       "invalidAmount": "Enter a valid purchase amount before scanning",
+      "invalidLocation": "Select a branch before scanning",
       "resultTitle": "Scan successful",
+      "resultTitleZeroPoints": "Scan completed — 0 points",
       "startCamera": "Start camera",
       "stopCamera": "Stop camera",
       "cameraIdle": "Camera is off. Start it to scan a customer QR code.",
-      "cameraHint": "Point the camera at the customer QR. Points are awarded automatically when a code is detected.",
+      "cameraHint": "Point the camera at the customer's latest QR. The scan runs automatically when a code is detected.",
       "cameraError": "Unable to access the camera. Allow camera permission and try again.",
       "processing": "Processing QR scan...",
       "fields": {
         "qrToken": "Customer QR token",
         "purchaseAmount": "Purchase amount",
         "locationId": "Branch / location",
-        "locationPlaceholder": "All branches (optional)",
+        "locationPlaceholder": "Select branch",
         "purchaseId": "Purchase ID (optional)"
       },
       "result": {
+        "noMatchingRule": "No active point rule matched this scan. The checkout still succeeded — purchase and any campaign discount were recorded, but pointsAwarded is 0.",
+        "purchaseAmount": "Bill amount",
+        "discountAmount": "Discount",
+        "payableAmount": "Payable (after discount)",
         "pointsAwarded": "Points awarded",
+        "ruleId": "Rule applied",
+        "noRuleApplied": "None",
+        "campaign": "Campaign",
+        "noCampaign": "None",
         "customerId": "Customer",
-        "payableAmount": "Payable",
+        "scanId": "Scan ID",
+        "purchaseId": "Purchase ID",
         "tierName": "Tier",
         "tierUpgraded": "upgraded",
         "badges": "Badges"
       }
+    },
+    "scanLocations": {
+      "loading": "Loading branches...",
+      "empty": "No active branches available for checkout."
     },
     "branches": {
       "loading": "Loading branches...",
@@ -122,9 +144,12 @@
       "loading": "Loading point rules...",
       "empty": "No point rules yet. Create one above.",
       "total": "{{count}} rules",
+      "listTitle": "Point rules ({{count}})",
+      "listHint": "Higher priority wins when multiple rules match. Empty branch scope means all branches.",
       "calculation": {
         "flat": "Flat points",
-        "spendBased": "Spend-based"
+        "amountBased": "Amount-based",
+        "hybrid": "Hybrid (flat + amount-based)"
       },
       "fields": {
         "name": "Rule name",
@@ -134,6 +159,7 @@
         "pointsPerSpendUnit": "Points per spend unit",
         "minimumPurchase": "Minimum purchase",
         "maximumPointsPerScan": "Max points per scan",
+        "dailyUserPointCap": "Daily user point cap",
         "priority": "Priority",
         "locationIds": "Branches (optional)",
         "startsAt": "Starts at",
@@ -141,10 +167,24 @@
       },
       "columns": {
         "name": "Name",
+        "status": "Status",
         "type": "Type",
         "points": "Points",
+        "priority": "Priority",
         "minimum": "Min purchase",
+        "maxPerScan": "Max / scan",
+        "dailyCap": "Daily cap",
+        "branches": "Branches",
         "window": "Active window"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "scheduled": "Scheduled",
+        "expired": "Expired"
+      },
+      "scope": {
+        "allBranches": "All branches"
       }
     }
   },
@@ -174,7 +214,7 @@
   },
   "adminUsers": {
     "title": "Admin users",
-    "description": "Create staff admins and assign roles. Root-admin only.",
+    "description": "Create staff admins and assign roles. Revoking access deactivates dashboard login without converting to a client. Root-admin only.",
     "createTitle": "Create admin user",
     "createSubmit": "Create admin",
     "createError": "Unable to create admin user",
@@ -199,11 +239,13 @@
     "status": {
       "active": "Active",
       "inactive": "Inactive",
+      "deactivated": "Access revoked",
       "banned": "Banned"
     },
     "actions": {
       "updateRole": "Update role",
-      "demote": "Demote"
+      "revokeAccess": "Revoke access",
+      "reactivate": "Reactivate"
     }
   },
   "customers": {

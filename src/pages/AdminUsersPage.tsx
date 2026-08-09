@@ -22,7 +22,8 @@ export function AdminUsersPage() {
     loadAdminUsers,
     createAdminUser,
     updateAdminUserRole,
-    demoteAdminUser,
+    revokeAdminAccess,
+    reactivateAdminUser,
     clearError,
   } = useAdminUserManagement();
   const { roles, loadRoles } = useAdminRoleManagement();
@@ -217,6 +218,7 @@ export function AdminUsersPage() {
                 {adminUsers.map((adminUser) => {
                   const isSelf = currentUser?.id === adminUser.id;
                   const isRoot = adminUser.isRootAdmin();
+                  const isDeactivated = !adminUser.isActive && !adminUser.isBanned;
                   const draftRole =
                     rowRoleDrafts[adminUser.id] ||
                     adminUser.adminRoleName ||
@@ -235,8 +237,8 @@ export function AdminUsersPage() {
                         {adminUser.phone}
                       </td>
                       <td className="px-3 py-3 sm:px-4">
-                        {isRoot || isSelf ? (
-                          adminUser.adminRoleName || adminUser.role
+                        {isRoot || isSelf || isDeactivated ? (
+                          adminUser.adminRoleName || adminUser.role || "—"
                         ) : (
                           <select
                             className={tableSelectClassName}
@@ -261,11 +263,24 @@ export function AdminUsersPage() {
                           ? t("adminUsers.status.banned")
                           : adminUser.isActive
                             ? t("adminUsers.status.active")
-                            : t("adminUsers.status.inactive")}
+                            : t("adminUsers.status.deactivated")}
                       </td>
                       <td className="px-4 py-3">
                         {isRoot || isSelf ? (
                           <span className="text-xs text-slate-400">—</span>
+                        ) : isDeactivated ? (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            disabled={isLoading}
+                            onClick={() => {
+                              void reactivateAdminUser(adminUser.id).catch(
+                                () => undefined
+                              );
+                            }}
+                          >
+                            {t("adminUsers.actions.reactivate")}
+                          </Button>
                         ) : (
                           <div className="flex flex-wrap gap-2">
                             <Button
@@ -285,12 +300,12 @@ export function AdminUsersPage() {
                               variant="destructive"
                               disabled={isLoading}
                               onClick={() => {
-                                void demoteAdminUser(adminUser.id).catch(
+                                void revokeAdminAccess(adminUser.id).catch(
                                   () => undefined
                                 );
                               }}
                             >
-                              {t("adminUsers.actions.demote")}
+                              {t("adminUsers.actions.revokeAccess")}
                             </Button>
                           </div>
                         )}

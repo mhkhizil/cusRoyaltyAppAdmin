@@ -92,19 +92,39 @@ export class ApiAdminUserRepository implements IAdminUserRepository {
     }
   }
 
-  async demoteAdminUser(userId: string): Promise<AdminUser> {
+  async revokeAdminAccess(userId: string): Promise<AdminUser> {
     try {
       const response = await this.httpClient.delete<
         ApiEnvelopeDTO<AdminUserResponseDTO>
-      >(API_ENDPOINTS.ADMIN_USERS.REMOVE_ROLE(userId));
+      >(API_ENDPOINTS.ADMIN_USERS.REVOKE_ACCESS(userId));
 
       if (response.success === false || !response.data) {
-        throw new Error(response.message || "Failed to demote admin user");
+        throw new Error(response.message || "Failed to revoke admin access");
       }
 
       return mapAdminUser(response.data);
     } catch (error) {
-      throw new Error(extractErrorMessage(error, "Failed to demote admin user"));
+      throw new Error(
+        extractErrorMessage(error, "Failed to revoke admin access")
+      );
+    }
+  }
+
+  async reactivateAdminUser(userId: string): Promise<AdminUser> {
+    try {
+      const response = await this.httpClient.patch<
+        ApiEnvelopeDTO<AdminUserResponseDTO>
+      >(API_ENDPOINTS.ADMIN_USERS.UPDATE_ROLE(userId), { role: "ADMIN" });
+
+      if (response.success === false || !response.data) {
+        throw new Error(response.message || "Failed to reactivate admin user");
+      }
+
+      return mapAdminUser(response.data);
+    } catch (error) {
+      throw new Error(
+        extractErrorMessage(error, "Failed to reactivate admin user")
+      );
     }
   }
 }

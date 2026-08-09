@@ -1,8 +1,8 @@
 # i18n
 
-Locale files live in `locales/`.
+Supported languages: **English** (`en`) and **Myanmar** (`my`).
 
-- `en.json` is the source of truth for template keys.
-- Other languages override only the keys they translate; English fills the rest.
+- Base strings: `locales/en.json`
+- Myanmar overrides: `locales/my.json` (merged on top of English via `deepMerge`)
 
-Add new keys in English first, then optionally override them in `ko.json`, `my.json`, and `zh-CN.json`.
+Add new keys in English first, then add Myanmar translations in `my.json`.

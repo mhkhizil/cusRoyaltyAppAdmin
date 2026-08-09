@@ -1,8 +1,13 @@
+import { Branch } from "../../domain/entities/Branch";
 import { PointRule } from "../../domain/entities/PointRule";
 import { QrScanResult } from "../../domain/entities/QrScanResult";
 import { IPointsRepository } from "../../domain/repositories/IPointsRepository";
 import { IPointsService } from "../../domain/services/IPointsService";
 import { CreatePointRuleDTO, QrScanRequestDTO } from "../dtos/PointsDTO";
+import {
+  POINT_CALCULATION_TYPES,
+  PointCalculationType,
+} from "../../domain/entities/PointRule";
 
 function createIdempotencyKey(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -27,13 +32,22 @@ export class PointsService implements IPointsService {
       throw new Error("Purchase amount must be a non-negative number");
     }
 
+    const locationId = payload.locationId.trim();
+    if (!locationId) {
+      throw new Error("Branch location is required");
+    }
+
     return this.pointsRepository.scanQr({
       idempotencyKey: payload.idempotencyKey.trim() || createIdempotencyKey(),
       qrToken,
       purchaseAmount: payload.purchaseAmount,
-      locationId: payload.locationId?.trim() || undefined,
+      locationId,
       purchaseId: payload.purchaseId?.trim() || undefined,
     });
+  }
+
+  async listScanLocations(): Promise<Branch[]> {
+    return this.pointsRepository.listScanLocations();
   }
 
   async listRules(): Promise<PointRule[]> {
@@ -52,18 +66,21 @@ export class PointsService implements IPointsService {
     if (!calculationType) {
       throw new Error("Calculation type is required");
     }
+    if (!POINT_CALCULATION_TYPES.includes(calculationType as PointCalculationType)) {
+      throw new Error("Calculation type must be FLAT, AMOUNT_BASED, or HYBRID");
+    }
 
-    if (calculationType === "FLAT") {
+    if (calculationType === "FLAT" || calculationType === "HYBRID") {
       if (
         payload.flatPoints === undefined ||
         payload.flatPoints === null ||
         Number.isNaN(payload.flatPoints)
       ) {
-        throw new Error("Flat points are required for FLAT rules");
+        throw new Error("Flat points are required for FLAT and HYBRID rules");
       }
     }
 
-    if (calculationType !== "FLAT") {
+    if (calculationType === "AMOUNT_BASED" || calculationType === "HYBRID") {
       if (
         payload.spendUnit === undefined ||
         payload.pointsPerSpendUnit === undefined ||
@@ -71,20 +88,29 @@ export class PointsService implements IPointsService {
         Number.isNaN(payload.pointsPerSpendUnit)
       ) {
         throw new Error(
-          "Spend unit and points per spend unit are required for spend-based rules"
+          "Spend unit and points per spend unit are required for AMOUNT_BASED and HYBRID rules"
         );
       }
+    }
+
+    if (
+      payload.dailyUserPointCap !== undefined &&
+      payload.dailyUserPointCap !== null &&
+      (Number.isNaN(payload.dailyUserPointCap) || payload.dailyUserPointCap < 0)
+    ) {
+      throw new Error("Daily user point cap must be a non-negative number");
     }
 
     return this.pointsRepository.createRule({
       name,
       description: payload.description?.trim() || undefined,
-      calculationType,
+      calculationType: calculationType as PointCalculationType,
       flatPoints: payload.flatPoints,
       spendUnit: payload.spendUnit,
       pointsPerSpendUnit: payload.pointsPerSpendUnit,
       minimumPurchase: payload.minimumPurchase,
       maximumPointsPerScan: payload.maximumPointsPerScan,
+      dailyUserPointCap: payload.dailyUserPointCap,
       priority: payload.priority,
       locationIds: payload.locationIds?.filter(Boolean),
       startsAt: payload.startsAt?.trim() || undefined,

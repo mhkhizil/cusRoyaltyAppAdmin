@@ -1,3 +1,4 @@
+import { Branch } from "../entities/Branch";
 import { PointRule } from "../entities/PointRule";
 import { QrScanResult } from "../entities/QrScanResult";
 import {
@@ -7,6 +8,7 @@ import {
 
 export interface IPointsService {
   scanQr(payload: QrScanRequestDTO): Promise<QrScanResult>;
+  listScanLocations(): Promise<Branch[]>;
   listRules(): Promise<PointRule[]>;
   createRule(payload: CreatePointRuleDTO): Promise<PointRule>;
 }

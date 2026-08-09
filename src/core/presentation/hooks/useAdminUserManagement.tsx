@@ -17,7 +17,8 @@ interface UseAdminUserManagementReturn {
     userId: string,
     payload: UpdateAdminUserRoleDTO
   ) => Promise<AdminUser>;
-  demoteAdminUser: (userId: string) => Promise<AdminUser>;
+  revokeAdminAccess: (userId: string) => Promise<AdminUser>;
+  reactivateAdminUser: (userId: string) => Promise<AdminUser>;
   clearError: () => void;
 }
 
@@ -94,17 +95,41 @@ export function useAdminUserManagement(): UseAdminUserManagementReturn {
     [adminUserService, clearError]
   );
 
-  const demoteAdminUser = useCallback(
+  const revokeAdminAccess = useCallback(
     async (userId: string) => {
       try {
         setIsLoading(true);
         clearError();
-        const demoted = await adminUserService.demoteAdminUser(userId);
-        setAdminUsers((prev) => prev.filter((user) => user.id !== userId));
-        return demoted;
+        const revoked = await adminUserService.revokeAdminAccess(userId);
+        setAdminUsers((prev) =>
+          prev.map((user) => (user.id === userId ? revoked : user))
+        );
+        return revoked;
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Failed to demote admin user"
+          err instanceof Error ? err.message : "Failed to revoke admin access"
+        );
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [adminUserService, clearError]
+  );
+
+  const reactivateAdminUser = useCallback(
+    async (userId: string) => {
+      try {
+        setIsLoading(true);
+        clearError();
+        const reactivated = await adminUserService.reactivateAdminUser(userId);
+        setAdminUsers((prev) =>
+          prev.map((user) => (user.id === userId ? reactivated : user))
+        );
+        return reactivated;
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to reactivate admin user"
         );
         throw err;
       } finally {
@@ -121,7 +146,8 @@ export function useAdminUserManagement(): UseAdminUserManagementReturn {
     loadAdminUsers,
     createAdminUser,
     updateAdminUserRole,
-    demoteAdminUser,
+    revokeAdminAccess,
+    reactivateAdminUser,
     clearError,
   };
 }

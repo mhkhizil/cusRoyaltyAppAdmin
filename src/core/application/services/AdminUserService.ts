@@ -54,17 +54,25 @@ export class AdminUserService implements IAdminUserService {
     if (!role) {
       throw new Error("Role is required");
     }
-    if (role.toUpperCase() === "ROOT_ADMIN") {
-      throw new Error("ROOT_ADMIN cannot be assigned");
+    const normalizedRole = role.toUpperCase();
+    if (normalizedRole === "ROOT_ADMIN" || normalizedRole === "USER") {
+      throw new Error("ROOT_ADMIN and USER roles cannot be assigned");
     }
 
     return this.adminUserRepository.updateAdminUserRole(userId, { role });
   }
 
-  async demoteAdminUser(userId: string): Promise<AdminUser> {
+  async revokeAdminAccess(userId: string): Promise<AdminUser> {
     if (!userId.trim()) {
       throw new Error("User id is required");
     }
-    return this.adminUserRepository.demoteAdminUser(userId);
+    return this.adminUserRepository.revokeAdminAccess(userId);
+  }
+
+  async reactivateAdminUser(userId: string): Promise<AdminUser> {
+    if (!userId.trim()) {
+      throw new Error("User id is required");
+    }
+    return this.adminUserRepository.reactivateAdminUser(userId);
   }
 }

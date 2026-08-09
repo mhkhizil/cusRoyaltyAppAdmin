@@ -11,5 +11,6 @@ export interface IAdminUserRepository {
     userId: string,
     payload: UpdateAdminUserRoleDTO
   ): Promise<AdminUser>;
-  demoteAdminUser(userId: string): Promise<AdminUser>;
+  revokeAdminAccess(userId: string): Promise<AdminUser>;
+  reactivateAdminUser(userId: string): Promise<AdminUser>;
 }

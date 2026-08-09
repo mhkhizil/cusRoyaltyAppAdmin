@@ -3,15 +3,11 @@ import { useTranslation } from "react-i18next";
 
 const LANGUAGE_OPTIONS = [
   { value: "en", labelKey: "language.english", shortLabel: "EN" },
-  { value: "ko", labelKey: "language.korean", shortLabel: "KO" },
   { value: "my", labelKey: "language.myanmar", shortLabel: "MY" },
-  { value: "zh-CN", labelKey: "language.chineseSimplified", shortLabel: "ZH" },
 ] as const;
 
 function resolveSelectedLanguage(language?: string) {
   if (!language) return "en";
-  if (language === "zh-CN" || language.startsWith("zh")) return "zh-CN";
-  if (language.startsWith("ko")) return "ko";
   if (language.startsWith("my")) return "my";
   return "en";
 }

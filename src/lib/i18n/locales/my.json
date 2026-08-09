@@ -1,28 +1,279 @@
 {
+  "common": {
+    "refresh": "ပြန်လည်ဖွင့်ရန်",
+    "refreshing": "ပြန်လည်ဖွင့်နေသည်...",
+    "delete": "ဖျက်ရန်",
+    "save": "သိမ်းရန်",
+    "cancel": "ပယ်ဖျက်ရန်",
+    "loading": "ဖွင့်နေသည်...",
+    "noDataAvailable": "ဒေတာ မရှိပါ",
+    "clearSearch": "ရှာဖွေမှု ရှင်းရန်"
+  },
+  "language": {
+    "english": "English",
+    "myanmar": "မြန်မာ",
+    "switchLanguage": "ဘာသာစကား ပြောင်းရန်"
+  },
+  "theme": {
+    "switchToLightMode": "အလင်းမုဒ်သို့ ပြောင်းရန်",
+    "switchToDarkMode": "အမှောင်မုဒ်သို့ ပြောင်းရန်"
+  },
+  "networkStatus": {
+    "offlineTitle": "အင်တာနက် မရှိပါ",
+    "offlineSubtitle": "ဆက်လက်အသုံးပြုရန် အင်တာနက် ပြန်ချိတ်ပါ။",
+    "offlineBadge": "Offline"
+  },
   "shell": {
-    "brandTitle": "App",
-    "brandSubtitle": "Frontend template",
+    "brandTitle": "Customer Royalty",
+    "brandSubtitle": "Admin dashboard",
+    "mainMenu": "မီနူး",
+    "workspace": "Workspace",
+    "workspaceTitle": "Admin ဝင်ရောက်ခွင့်",
+    "workspaceText": "Root admin များက role နှင့် staff များကို စီမံနိုင်သည်။ Staff ဝင်ရောက်ခွင့်သည် ခွင့်ပြုချက်များပေါ် မူတည်သည်။",
+    "appVersion": "v{{version}}",
     "dashboardTitle": "Dashboard",
-    "usersTitle": "Users",
+    "dashboardMeta": "အကျဉ်းချုပ်",
+    "pointsTitle": "Points",
+    "pointsMeta": "QR & rules",
+    "adminUsersTitle": "Admin users",
+    "adminUsersMeta": "Staff RBAC",
+    "adminRolesTitle": "Admin roles",
+    "adminRolesMeta": "Permissions",
     "customersTitle": "Customers",
-    "logout": "ထွက်ရန်"
+    "customersMeta": "Example CRUD",
+    "topbarTitle": "Workspace",
+    "topbarSubtitle": "လုံခြုံသော admin session",
+    "signedInAs": "ဝင်ရောက်ထားသူ",
+    "fullAccessRole": "Root admin",
+    "userRole": "Staff admin",
+    "userFallback": "Admin",
+    "logout": "ထွက်ရန်",
+    "logoutShort": "ထွက်",
+    "openMenu": "မီနူး ဖွင့်ရန်",
+    "closeMenu": "မီနူး ပိတ်ရန်",
+    "toggleSidebar": "Sidebar ချုံ့/ချဲ့ရန်"
   },
   "login": {
-    "title": "အကောင့်ဝင်ရန်",
-    "submit": "ဝင်မည်",
-    "submitting": "ဝင်နေသည်..."
+    "title": "Admin အကောင့်ဝင်ရန်",
+    "subtitle": "Admin email နှင့် password ဖြင့် ဝင်ရောက်ပါ။",
+    "emailLabel": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password ထည့်ပါ",
+    "showPassword": "Password ပြရန်",
+    "hidePassword": "Password ဖျောက်ရန်",
+    "submit": "ဝင်ရောက်မည်",
+    "submitting": "ဝင်နေသည်...",
+    "errorFallback": "ဝင်ရောက်၍ မရပါ"
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "description": "Customer Royalty admin အကျဉ်းချုပ်။",
+    "adminUsersCard": "Admin users",
+    "adminRolesCard": "Admin roles",
+    "exampleValue": "—",
+    "adminUsersHint": "Staff admin များကို ဖန်တီး/စီမံရန်",
+    "adminRolesHint": "Staff အတွက် permission set များ သတ်မှတ်ရန်",
+    "nextStepsTitle": "RBAC စီမံခန့်ခွဲမှု",
+    "nextStepsText": "Root admin များက role နှင့် staff account များကို ဤနေရာမှ စီမံနိုင်သည်။",
+    "openAdminUsers": "Admin users ဖွင့်ရန်",
+    "openAdminRoles": "Admin roles ဖွင့်ရန်"
   },
-  "users": {
-    "title": "Users"
+  "points": {
+    "title": "Points",
+    "description": "Rule-driven checkout — point rule များ သတ်မှတ်ပြီး counter တွင် customer QR scan လုပ်ပါ။",
+    "guidance": {
+      "title": "Admin points အလုပ်လုပ်ပုံ",
+      "rulesDrivePoints": "Point rule များက scan တွင် point အားလုံးကို ထိန်းချုပ်သည် — hardcoded formula မရှိပါ။",
+      "payableAmount": "Point များကို campaign discount နောက်ကျသော payable amount ပေါ်တွင် တွက်ချက်သည်၊ မူလ bill ပေါ် မဟုတ်ပါ။",
+      "customerQr": "Customer များသည် app တွင် QR rotate လုပ်ပြီး checkout တွင် နောက်ဆုံး token ကို ပြရမည်။",
+      "noRuleZeroPoints": "Active rule မကိုက်ညီပါက scan အောင်မြင်သော်လည်း pointsAwarded သည် 0 ဖြစ်နိုင်သည်။"
+    },
+    "scan": {
+      "title": "QR scan",
+      "subtitle": "Checkout branch ရွေးချယ်ပါ၊ purchase amount ထည့်ပါ၊ customer QR ကို camera ဖြင့် scan လုပ်ပါ။",
+      "submit": "Scan လုပ်ရန်",
+      "error": "QR scan လုပ်၍ မရပါ",
+      "invalidAmount": "Scan မလုပ်မီ valid purchase amount ထည့်ပါ",
+      "invalidLocation": "Scan မလုပ်မီ branch ရွေးချယ်ပါ",
+      "resultTitle": "Scan အောင်မြင်ပါသည်",
+      "resultTitleZeroPoints": "Scan ပြီးပါပြီ — point 0",
+      "startCamera": "Camera ဖွင့်ရန်",
+      "stopCamera": "Camera ပိတ်ရန်",
+      "cameraIdle": "Camera ပိတ်ထားသည်။ Customer QR scan လုပ်ရန် ဖွင့်ပါ။",
+      "cameraHint": "Customer ၏ နောက်ဆုံး QR ကို camera ညွှန်ပါ။ Code တွေ့ပါက scan အလိုအလျောက် လုပ်ပါမည်။",
+      "cameraError": "Camera သုံး၍ မရပါ။ Permission ပေးပြီး ထပ်ကြိုးစားပါ။",
+      "processing": "QR scan လုပ်နေသည်...",
+      "fields": {
+        "qrToken": "Customer QR token",
+        "purchaseAmount": "Purchase amount",
+        "locationId": "Branch / location",
+        "locationPlaceholder": "Branch ရွေးချယ်ပါ",
+        "purchaseId": "Purchase ID (optional)"
+      },
+      "result": {
+        "noMatchingRule": "Active point rule မကိုက်ညီပါ။ Checkout မှတ်တမ်းတင်ပြီးပါပြီ — purchase/discount မှတ်သွင်းနိုင်သော်လည်း pointsAwarded သည် 0 ဖြစ်သည်။",
+        "purchaseAmount": "Bill amount",
+        "discountAmount": "Discount",
+        "payableAmount": "Payable (discount နောက်ပိုင်း)",
+        "pointsAwarded": "Points awarded",
+        "ruleId": "Rule applied",
+        "noRuleApplied": "မရှိ",
+        "campaign": "Campaign",
+        "noCampaign": "မရှိ",
+        "customerId": "Customer",
+        "scanId": "Scan ID",
+        "purchaseId": "Purchase ID",
+        "tierName": "Tier",
+        "tierUpgraded": "upgrade ဖြစ်သည်",
+        "badges": "Badges"
+      }
+    },
+    "scanLocations": {
+      "loading": "Branch များ ဖွင့်နေသည်...",
+      "empty": "Checkout အတွက် active branch မရှိပါ။"
+    },
+    "branches": {
+      "loading": "Branch များ ဖွင့်နေသည်...",
+      "empty": "Branch မရှိပါ။"
+    },
+    "rules": {
+      "createTitle": "Point rule ဖန်တီးရန်",
+      "createSubmit": "Rule ဖန်တီးမည်",
+      "createError": "Point rule ဖန်တီး၍ မရပါ",
+      "loading": "Point rule များ ဖွင့်နေသည်...",
+      "empty": "Point rule မရှိသေးပါ။ အပေါ်တွင် တစ်ခု ဖန်တီးပါ။",
+      "total": "rule {{count}} ခု",
+      "listTitle": "Point rules ({{count}})",
+      "listHint": "Rule များစွာ ကိုက်ညီပါက priority မြင့်သည်က အနိုင်ရသည်။ Branch မသတ်မှတ်ပါက branch အားလုံးသို့ သက်ရောက်သည်။",
+      "calculation": {
+        "flat": "Flat points",
+        "amountBased": "Amount-based",
+        "hybrid": "Hybrid (flat + amount-based)"
+      },
+      "fields": {
+        "name": "Rule name",
+        "description": "Description",
+        "flatPoints": "Flat points",
+        "spendUnit": "Spend unit",
+        "pointsPerSpendUnit": "Points per spend unit",
+        "minimumPurchase": "Minimum purchase",
+        "maximumPointsPerScan": "Max points per scan",
+        "dailyUserPointCap": "Daily user point cap",
+        "priority": "Priority",
+        "locationIds": "Branches (optional)",
+        "startsAt": "Starts at",
+        "endsAt": "Ends at"
+      },
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "type": "Type",
+        "points": "Points",
+        "priority": "Priority",
+        "minimum": "Min purchase",
+        "maxPerScan": "Max / scan",
+        "dailyCap": "Daily cap",
+        "branches": "Branches",
+        "window": "Active window"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "scheduled": "Scheduled",
+        "expired": "Expired"
+      },
+      "scope": {
+        "allBranches": "Branch အားလုံး"
+      }
+    }
+  },
+  "adminRoles": {
+    "title": "Admin roles",
+    "description": "Staff admin များအတွက် permission set များ ဖန်တီးပါ။ Root-admin only.",
+    "createTitle": "Role ဖန်တီးရန်",
+    "createSubmit": "Role ဖန်တီးမည်",
+    "createError": "Role ဖန်တီး၍ မရပါ",
+    "loading": "Role များ ဖွင့်နေသည်...",
+    "empty": "Role မတွေ့ပါ။",
+    "total": "role {{count}} ခု",
+    "permissionsEmpty": "API မှ permission မရရှိသေးပါ။",
+    "systemYes": "System",
+    "systemNo": "Custom",
+    "fields": {
+      "name": "Role name (ဥ. CONTENT_MODERATOR)",
+      "description": "Description",
+      "permissions": "Permissions"
+    },
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "permissions": "Permissions",
+      "system": "Type"
+    }
+  },
+  "adminUsers": {
+    "title": "Admin users",
+    "description": "Staff admin များ ဖန်တီးပြီး role ခန့်အပ်ပါ။ Access revoke လုပ်ပါက client သို့ မပြောင်းဘဲ dashboard login ပိတ်ပါမည်။ Root-admin only.",
+    "createTitle": "Admin user ဖန်တီးရန်",
+    "createSubmit": "Admin ဖန်တီးမည်",
+    "createError": "Admin user ဖန်တီး၍ မရပါ",
+    "loading": "Admin user များ ဖွင့်နေသည်...",
+    "empty": "Admin user မတွေ့ပါ။",
+    "total": "admin user {{count}} ဦး",
+    "fields": {
+      "nickname": "Nickname",
+      "phone": "Phone",
+      "email": "Email",
+      "password": "Password (အနည်းဆုံး 8)",
+      "role": "Role ရွေးချယ်ပါ"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "deactivated": "Access revoked",
+      "banned": "Banned"
+    },
+    "actions": {
+      "updateRole": "Role update",
+      "revokeAccess": "Access revoke",
+      "reactivate": "Reactivate"
+    }
   },
   "customers": {
-    "title": "Customers"
+    "title": "Customers",
+    "description": "Example CRUD resource။ Feature အသစ်များအတွက် ဤ pattern ကို copy လုပ်ပါ။",
+    "createTitle": "Customer ဖန်တီးရန်",
+    "createSubmit": "ဖန်တီးမည်",
+    "createError": "Customer ဖန်တီး၍ မရပါ",
+    "loading": "Customer များ ဖွင့်နေသည်...",
+    "empty": "Customer မရှိသေးပါ။ အပေါ်တွင် တစ်ဦး ဖန်တီးပါ သို့မဟုတ် API ချိတ်ဆက်ပါ။",
+    "total": "customer {{count}} ဦး",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "columns": {
+      "actions": "Actions"
+    }
+  },
+  "router": {
+    "accessDeniedTitle": "ဝင်ရောက်ခွင့် မရှိပါ",
+    "accessDeniedDescription": "ဤစာမျက်နှာကို ကြည့်ရှုခွင့် မရှိပါ။"
   },
   "notFound": {
     "title": "စာမျက်နှာ မတွေ့ပါ",
-    "goToDashboard": "Dashboard သို့"
+    "description": "ဤ route မရှိပါ။",
+    "goToDashboard": "Dashboard သို့ သွားရန်"
   }
 }

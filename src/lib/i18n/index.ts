@@ -4,8 +4,6 @@ import LanguageDetector from "i18next-browser-languagedetector";
 
 import enTranslations from "./locales/en.json";
 import myTranslations from "./locales/my.json";
-import koTranslations from "./locales/ko.json";
-import zhCnTranslations from "./locales/zh-CN.json";
 
 type TranslationTree = Record<string, unknown>;
 
@@ -35,22 +33,10 @@ const resources = {
   en: {
     translation: enTranslations,
   },
-  ko: {
-    translation: deepMerge(
-      enTranslations as TranslationTree,
-      koTranslations as TranslationTree
-    ),
-  },
   my: {
     translation: deepMerge(
       enTranslations as TranslationTree,
       myTranslations as TranslationTree
-    ),
-  },
-  "zh-CN": {
-    translation: deepMerge(
-      enTranslations as TranslationTree,
-      zhCnTranslations as TranslationTree
     ),
   },
 };
@@ -60,7 +46,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    supportedLngs: ["en", "ko", "my", "zh-CN"],
+    supportedLngs: ["en", "my"],
     fallbackLng: "en",
     debug: false,
     detection: {
@@ -77,7 +63,7 @@ i18n
 
 i18n.on("languageChanged", (language) => {
   if (typeof document !== "undefined") {
-    document.documentElement.lang = language;
+    document.documentElement.lang = language === "my" ? "my" : "en";
   }
 });
 

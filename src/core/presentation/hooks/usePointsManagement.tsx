@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Branch } from "../../domain/entities/Branch";
 import { PointRule } from "../../domain/entities/PointRule";
 import { QrScanResult } from "../../domain/entities/QrScanResult";
 import { IPointsService } from "../../domain/services/IPointsService";
@@ -10,10 +11,13 @@ import container from "../../infrastructure/di/container";
 
 interface UsePointsManagementReturn {
   rules: PointRule[];
+  scanLocations: Branch[];
   lastScanResult: QrScanResult | null;
   isLoading: boolean;
+  isScanLocationsLoading: boolean;
   error: string | null;
   loadRules: () => Promise<void>;
+  loadScanLocations: () => Promise<void>;
   createRule: (payload: CreatePointRuleDTO) => Promise<PointRule>;
   scanQr: (payload: QrScanRequestDTO) => Promise<QrScanResult>;
   clearError: () => void;
@@ -22,10 +26,12 @@ interface UsePointsManagementReturn {
 
 export function usePointsManagement(): UsePointsManagementReturn {
   const [rules, setRules] = useState<PointRule[]>([]);
+  const [scanLocations, setScanLocations] = useState<Branch[]>([]);
   const [lastScanResult, setLastScanResult] = useState<QrScanResult | null>(
     null
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [isScanLocationsLoading, setIsScanLocationsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const pointsService = container.resolve<IPointsService>("pointsService");
@@ -49,6 +55,22 @@ export function usePointsManagement(): UsePointsManagementReturn {
       throw err;
     } finally {
       setIsLoading(false);
+    }
+  }, [clearError, pointsService]);
+
+  const loadScanLocations = useCallback(async () => {
+    try {
+      setIsScanLocationsLoading(true);
+      clearError();
+      const result = await pointsService.listScanLocations();
+      setScanLocations(result);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to load scan locations"
+      );
+      throw err;
+    } finally {
+      setIsScanLocationsLoading(false);
     }
   }, [clearError, pointsService]);
 
@@ -93,10 +115,13 @@ export function usePointsManagement(): UsePointsManagementReturn {
 
   return {
     rules,
+    scanLocations,
     lastScanResult,
     isLoading,
+    isScanLocationsLoading,
     error,
     loadRules,
+    loadScanLocations,
     createRule,
     scanQr,
     clearError,

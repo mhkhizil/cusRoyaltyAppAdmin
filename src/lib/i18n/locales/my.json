@@ -35,6 +35,8 @@
     "dashboardMeta": "အကျဉ်းချုပ်",
     "pointsTitle": "Points",
     "pointsMeta": "QR & rules",
+    "campaignsTitle": "Campaigns",
+    "campaignsMeta": "Discounts & promos",
     "adminUsersTitle": "Admin users",
     "adminUsersMeta": "Staff RBAC",
     "adminRolesTitle": "Admin roles",
@@ -230,6 +232,51 @@
       "description": "Description",
       "permissions": "Permissions",
       "system": "Type"
+    }
+  },
+  "campaigns": {
+    "title": "Campaigns",
+    "description": "Birthday, occasion နှင့် discover-sale campaign များ ဖန်တီးပါ။ Discount များသည် point တွက်ချက်မီ checkout တွင် apply ဖြစ်သည်။",
+    "createTitle": "Campaign ဖန်တီးရန်",
+    "createSubtitle": "Campaign အသစ်များသည် backend ပေါ် မူတည်ပြီး DRAFT ဖြင့် စတင်နိုင်သည်။",
+    "createSubmit": "Campaign ဖန်တီးမည်",
+    "createError": "Campaign ဖန်တီး၍ မရပါ",
+    "createSuccess": "Campaign ဖန်တီးပြီး ({{id}})။ Points awarded: {{pointsAwarded}}, recipients: {{recipients}}.",
+    "statusUpdateError": "Campaign status update လုပ်၍ မရပါ",
+    "loading": "Campaign များ ဖွင့်နေသည်...",
+    "empty": "Campaign မရှိသေးပါ။ အပေါ်တွင် တစ်ခု ဖန်တီးပါ။",
+    "total": "campaign {{count}} ခု",
+    "discoverableYes": "Yes",
+    "discoverableNo": "No",
+    "fields": {
+      "name": "Campaign name",
+      "slug": "Slug (URL key)",
+      "type": "Campaign type",
+      "discountValue": "Discount value (%)",
+      "minimumPurchase": "Minimum purchase",
+      "birthdayWindowDays": "Birthday window (days)",
+      "isDiscoverable": "Customer discover feed တွင် ပြရန်",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at"
+    },
+    "types": {
+      "BIRTHDAY": "Birthday",
+      "OCCASION": "Occasion",
+      "DISCOVER_SALE": "Discover sale"
+    },
+    "statuses": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "PAUSED": "Paused",
+      "ARCHIVED": "Archived"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "window": "Schedule",
+      "discoverable": "Discoverable",
+      "updateStatus": "Update status"
     }
   },
   "adminUsers": {

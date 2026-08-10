@@ -34,6 +34,12 @@ export const API_ENDPOINTS = {
     SCAN_LOCATIONS: "/api/v1/admin/dashboard/points/scan-locations",
   },
 
+  CAMPAIGNS: {
+    BASE: "/api/v1/admin/dashboard/campaigns",
+    UPDATE_STATUS: (campaignId: string) =>
+      `/api/v1/admin/dashboard/campaigns/${campaignId}/status`,
+  },
+
   OPS: {
     BRANCHES: "/api/v1/admin/dashboard/ops/branches",
   },

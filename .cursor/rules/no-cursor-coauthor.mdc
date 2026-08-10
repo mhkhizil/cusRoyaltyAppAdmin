@@ -1,0 +1,14 @@
+---
+description: Do not add Cursor as a git co-author on commits
+alwaysApply: true
+---
+
+# No Cursor commit attribution
+
+Never add any of the following to commits, PR descriptions, or commit messages:
+
+- `Co-authored-by: Cursor <cursoragent@cursor.com>`
+- `Made-with: Cursor`
+- Any other Cursor agent attribution trailer
+
+Commits must be attributed only to the human developer.

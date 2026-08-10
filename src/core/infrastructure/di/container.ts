@@ -26,6 +26,10 @@ import { IAdminRoleService } from "../../domain/services/IAdminRoleService";
 import { IAdminUserService } from "../../domain/services/IAdminUserService";
 import { IPointsService } from "../../domain/services/IPointsService";
 import { IBranchService } from "../../domain/services/IBranchService";
+import { ICampaignRepository } from "../../domain/repositories/ICampaignRepository";
+import { ApiCampaignRepository } from "../repositories/ApiCampaignRepository";
+import { ICampaignService } from "../../domain/services/ICampaignService";
+import { CampaignService } from "../../application/services/CampaignService";
 
 /**
  * Dependency Injection Container
@@ -76,6 +80,11 @@ class Container {
       new ApiBranchRepository(this.resolve("httpClient"))
     );
 
+    this.register<ICampaignRepository>(
+      "campaignRepository",
+      new ApiCampaignRepository(this.resolve("httpClient"))
+    );
+
     this.register<IAuthService>(
       "authService",
       new AuthService(this.resolve("authRepository"))
@@ -109,6 +118,11 @@ class Container {
     this.register<IBranchService>(
       "branchService",
       new BranchService(this.resolve("branchRepository"))
+    );
+
+    this.register<ICampaignService>(
+      "campaignService",
+      new CampaignService(this.resolve("campaignRepository"))
     );
   }
 

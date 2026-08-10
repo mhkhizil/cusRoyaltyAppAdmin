@@ -46,6 +46,11 @@ const PointRuleDetailPage = lazy(() =>
     default: module.PointRuleDetailPage,
   }))
 );
+const CampaignsPage = lazy(() =>
+  import("../../pages/CampaignsPage").then((module) => ({
+    default: module.CampaignsPage,
+  }))
+);
 const CustomersPage = lazy(() =>
   import("../../pages/CustomersPage").then((module) => ({
     default: module.CustomersPage,
@@ -180,6 +185,16 @@ export function AppRouter() {
                     requiredPermissions={PAGE_PERMISSIONS.points}
                   >
                     <PointRuleDetailPage />
+                  </RequirePermission>
+                }
+              />
+              <Route
+                path="/campaigns"
+                element={
+                  <RequirePermission
+                    requiredPermissions={PAGE_PERMISSIONS.campaigns}
+                  >
+                    <CampaignsPage />
                   </RequirePermission>
                 }
               />

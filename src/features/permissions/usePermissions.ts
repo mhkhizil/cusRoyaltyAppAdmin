@@ -15,12 +15,14 @@ export const PAGE_PERMISSIONS = {
   adminUsers: ["__ROOT_ADMIN__"] as string[],
   /** Matches backend "Missing points management permission" */
   points: ["MANAGE_POINTS"] as string[],
+  campaigns: ["MANAGE_CAMPAIGNS"] as string[],
   customers: ["MANAGE_CUSTOMERS"],
 } as const;
 
 export const PERMISSION_ROUTE_ORDER = [
   { path: "/dashboard", permissions: PAGE_PERMISSIONS.dashboard },
   { path: "/points", permissions: PAGE_PERMISSIONS.points },
+  { path: "/campaigns", permissions: PAGE_PERMISSIONS.campaigns },
   { path: "/admin-users", permissions: PAGE_PERMISSIONS.adminUsers },
   { path: "/admin-roles", permissions: PAGE_PERMISSIONS.adminRoles },
   { path: "/customers", permissions: PAGE_PERMISSIONS.customers },

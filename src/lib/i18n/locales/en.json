@@ -35,6 +35,8 @@
     "dashboardMeta": "Overview",
     "pointsTitle": "Points",
     "pointsMeta": "QR & rules",
+    "campaignsTitle": "Campaigns",
+    "campaignsMeta": "Discounts & promos",
     "adminUsersTitle": "Admin users",
     "adminUsersMeta": "Staff RBAC",
     "adminRolesTitle": "Admin roles",
@@ -230,6 +232,51 @@
       "description": "Description",
       "permissions": "Permissions",
       "system": "Type"
+    }
+  },
+  "campaigns": {
+    "title": "Campaigns",
+    "description": "Create birthday, occasion, and discover-sale campaigns. Discounts apply at checkout before points are calculated.",
+    "createTitle": "Create campaign",
+    "createSubtitle": "New campaigns start as DRAFT unless your backend activates them immediately.",
+    "createSubmit": "Create campaign",
+    "createError": "Unable to create campaign",
+    "createSuccess": "Campaign created ({{id}}). Points awarded: {{pointsAwarded}}, recipients: {{recipients}}.",
+    "statusUpdateError": "Unable to update campaign status",
+    "loading": "Loading campaigns...",
+    "empty": "No campaigns yet. Create one above.",
+    "total": "{{count}} campaigns",
+    "discoverableYes": "Yes",
+    "discoverableNo": "No",
+    "fields": {
+      "name": "Campaign name",
+      "slug": "Slug (URL key)",
+      "type": "Campaign type",
+      "discountValue": "Discount value (%)",
+      "minimumPurchase": "Minimum purchase",
+      "birthdayWindowDays": "Birthday window (days)",
+      "isDiscoverable": "Show in customer discover feed",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at"
+    },
+    "types": {
+      "BIRTHDAY": "Birthday",
+      "OCCASION": "Occasion",
+      "DISCOVER_SALE": "Discover sale"
+    },
+    "statuses": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "PAUSED": "Paused",
+      "ARCHIVED": "Archived"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "window": "Schedule",
+      "discoverable": "Discoverable",
+      "updateStatus": "Update status"
     }
   },
   "adminUsers": {

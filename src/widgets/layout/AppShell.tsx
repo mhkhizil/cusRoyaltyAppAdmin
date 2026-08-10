@@ -58,6 +58,17 @@ function PointsIcon() {
   );
 }
 
+function CampaignsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+      <path d="M4 10v10h16V10" />
+      <path d="M2 10h20" />
+      <path d="M12 10V4" />
+      <path d="M8 6h8" />
+    </svg>
+  );
+}
+
 function CustomersIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
@@ -231,6 +242,16 @@ function SidebarContent({
             meta={t("shell.pointsMeta")}
           />
         ) : null}
+        {canAccess(PAGE_PERMISSIONS.campaigns) ? (
+          <SidebarNavItem
+            to="/campaigns"
+            collapsed={collapsed}
+            onNavigate={onNavigate}
+            icon={<CampaignsIcon />}
+            title={t("shell.campaignsTitle")}
+            meta={t("shell.campaignsMeta")}
+          />
+        ) : null}
         {canAccess(PAGE_PERMISSIONS.adminUsers) ? (
           <SidebarNavItem
             to="/admin-users"
@@ -348,7 +369,7 @@ export function AppShell() {
       {isMobileNavOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-[1px] lg:hidden"
+          className="fixed inset-0 z-40 cursor-default bg-slate-950/50 backdrop-blur-[1px] lg:hidden"
           aria-label={t("shell.closeMenu")}
           onClick={closeMobileNav}
         />

@@ -44,4 +44,27 @@
   #root {
     @apply min-h-screen;
   }
+
+  a,
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="option"],
+  [role="menuitem"],
+  [role="tab"],
+  label:has(input[type="checkbox"]),
+  label:has(input[type="radio"]),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  select:not(:disabled),
+  summary {
+    @apply cursor-pointer;
+  }
+
+  button:disabled,
+  select:disabled,
+  input[type="checkbox"]:disabled,
+  input[type="radio"]:disabled,
+  [aria-disabled="true"] {
+    @apply cursor-not-allowed;
+  }
 }

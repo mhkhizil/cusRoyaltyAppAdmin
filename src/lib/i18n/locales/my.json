@@ -93,9 +93,12 @@
     },
     "scan": {
       "title": "QR scan",
-      "subtitle": "Checkout branch ရွေးချယ်ပါ၊ purchase amount ထည့်ပါ၊ customer QR ကို camera ဖြင့် scan လုပ်ပါ။",
+      "subtitle": "Branch နှင့် amount ရွေးပါ၊ customer QR scan ဖြင့် campaign options preview လုပ်ပြီးမှ checkout confirm လုပ်ပါ။",
       "submit": "Scan လုပ်ရန်",
+      "confirm": "Checkout confirm",
+      "cancelPreview": "Cancel / ပြန် scan",
       "error": "QR scan လုပ်၍ မရပါ",
+      "previewError": "QR scan campaign preview လုပ်၍ မရပါ",
       "invalidAmount": "Scan မလုပ်မီ valid purchase amount ထည့်ပါ",
       "invalidLocation": "Scan မလုပ်မီ branch ရွေးချယ်ပါ",
       "resultTitle": "Scan အောင်မြင်ပါသည်",
@@ -103,9 +106,23 @@
       "startCamera": "Camera ဖွင့်ရန်",
       "stopCamera": "Camera ပိတ်ရန်",
       "cameraIdle": "Camera ပိတ်ထားသည်။ Customer QR scan လုပ်ရန် ဖွင့်ပါ။",
-      "cameraHint": "Customer ၏ နောက်ဆုံး QR ကို camera ညွှန်ပါ။ Code တွေ့ပါက scan အလိုအလျောက် လုပ်ပါမည်။",
+      "cameraHint": "Customer ၏ နောက်ဆုံး QR ကို camera ညွှန်ပါ။ Code တွေ့ပါက preview အလိုအလျောက် လုပ်ပါမည်။",
+      "previewReadyHint": "အောက်တွင် campaign ရွေးပြီး checkout confirm လုပ်ပါ။",
       "cameraError": "Camera သုံး၍ မရပါ။ Permission ပေးပြီး ထပ်ကြိုးစားပါ။",
       "processing": "QR scan လုပ်နေသည်...",
+      "previewing": "Campaign options ဖွင့်နေသည်...",
+      "confirming": "Checkout confirm လုပ်နေသည်...",
+      "previewTitle": "Campaign ရွေးချယ်ပါ",
+      "previewSubtitle": "Customer {{customerId}} · bill {{amount}}",
+      "campaignChoiceTitle": "ဤ checkout အတွက် promotion",
+      "campaignChoice": {
+        "auto": "Backend auto suggestion သုံးမည်",
+        "autoEmpty": "ဤ bill/branch အတွက် auto-suggested campaign မရှိပါ။",
+        "none": "Promotion မသုံး",
+        "claimed": "Customer app တွင် claim ထားသည်များ",
+        "eligible": "Eligible campaigns",
+        "missingRedemption": "Redemption id မရှိ — ဤ claim ကို သုံး၍ မရပါ။"
+      },
       "fields": {
         "qrToken": "Customer QR token",
         "purchaseAmount": "Purchase amount",
@@ -238,7 +255,7 @@
     "title": "Campaigns",
     "description": "Birthday, occasion နှင့် discover-sale campaign များ ဖန်တီးပါ။ Discount များသည် point တွက်ချက်မီ checkout တွင် apply ဖြစ်သည်။",
     "createTitle": "Campaign ဖန်တီးရန်",
-    "createSubtitle": "Campaign အသစ်များသည် backend ပေါ် မူတည်ပြီး DRAFT ဖြင့် စတင်နိုင်သည်။",
+    "createSubtitle": "Campaign အသစ်များသည် backend ပေါ် မူတည်ပြီး DRAFT ဖြင့် စတင်နိုင်သည်။ Branch မရွေးရင် အားလုံးသို့ apply ဖြစ်သည်။",
     "createSubmit": "Campaign ဖန်တီးမည်",
     "createError": "Campaign ဖန်တီး၍ မရပါ",
     "createSuccess": "Campaign ဖန်တီးပြီး ({{id}})။ Points awarded: {{pointsAwarded}}, recipients: {{recipients}}.",
@@ -251,13 +268,25 @@
     "fields": {
       "name": "Campaign name",
       "slug": "Slug (URL key)",
+      "description": "Description (optional)",
       "type": "Campaign type",
       "discountValue": "Discount value (%)",
       "minimumPurchase": "Minimum purchase",
+      "maximumDiscount": "Maximum discount (optional)",
       "birthdayWindowDays": "Birthday window (days)",
+      "perUserLimit": "Per-user limit",
+      "totalLimit": "Total limit (optional)",
+      "minimumTierId": "Minimum tier ID (optional)",
+      "locationIds": "Branch scope",
+      "locationIdsHint": "မရွေးရင် branch အားလုံးသို့ apply ဖြစ်သည်။",
+      "locationIdsEditHint": "Checkbox အားလုံး ရှင်းပါက branch အားလုံးသို့ apply ဖြစ်သည်။",
       "isDiscoverable": "Customer discover feed တွင် ပြရန်",
       "startsAt": "Starts at",
       "endsAt": "Ends at"
+    },
+    "branches": {
+      "loading": "Branch များ ဖွင့်နေသည်...",
+      "empty": "Branch မရှိပါ။"
     },
     "types": {
       "BIRTHDAY": "Birthday",
@@ -272,11 +301,31 @@
     },
     "columns": {
       "name": "Name",
+      "slug": "Slug",
       "type": "Type",
+      "discount": "Discount",
+      "minPurchase": "Min purchase",
       "status": "Status",
       "window": "Schedule",
       "discoverable": "Discoverable",
-      "updateStatus": "Update status"
+      "updateStatus": "Update status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit"
+    },
+    "details": {
+      "title": "Campaign ပြင်ရန်",
+      "back": "Campaigns သို့ ပြန်သွားရန်",
+      "loading": "Campaign ဖွင့်နေသည်...",
+      "notFound": "Campaign မတွေ့ပါ",
+      "loadError": "Campaign ဖွင့်၍ မရပါ",
+      "updateError": "Campaign update လုပ်၍ မရပါ",
+      "updateSuccess": "Campaign update လုပ်ပြီးပါပြီ။",
+      "save": "သိမ်းမည်",
+      "archivedLocked": "Archived campaign များကို edit မရပါ။ Status ကို အရင်ပြောင်းပြီးမှ ပြင်ပါ။",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
     }
   },
   "adminUsers": {

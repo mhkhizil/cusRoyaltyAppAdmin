@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
 
   POINTS: {
     QR_SCAN: "/api/v1/admin/dashboard/points/qr-scan",
+    QR_SCAN_PREVIEW: "/api/v1/admin/dashboard/points/qr-scan/preview",
     RULES: "/api/v1/admin/dashboard/points/rules",
     RULE_BY_ID: (ruleId: string) =>
       `/api/v1/admin/dashboard/points/rules/${ruleId}`,
@@ -36,6 +37,8 @@ export const API_ENDPOINTS = {
 
   CAMPAIGNS: {
     BASE: "/api/v1/admin/dashboard/campaigns",
+    BY_ID: (campaignId: string) =>
+      `/api/v1/admin/dashboard/campaigns/${campaignId}`,
     UPDATE_STATUS: (campaignId: string) =>
       `/api/v1/admin/dashboard/campaigns/${campaignId}/status`,
   },

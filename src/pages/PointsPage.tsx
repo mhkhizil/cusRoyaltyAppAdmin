@@ -12,15 +12,44 @@ import {
   type PointRule,
   type PointRuleLifecycleStatus,
 } from "@/core/domain/entities/PointRule";
+import type {
+  CampaignMode,
+  QrScanCampaignOption,
+} from "@/core/domain/entities/QrScanPreview";
 
 const inputClassName =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-shop-ring dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
+
+type CampaignChoiceKey = "auto" | "none" | `claim:${string}` | `manual:${string}`;
 
 function createIdempotencyKey(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
   }
   return `scan-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function campaignChoiceFromKey(key: CampaignChoiceKey): {
+  campaignMode: CampaignMode;
+  campaignId?: string;
+  redemptionId?: string;
+} {
+  if (key === "auto") return { campaignMode: "AUTO" };
+  if (key === "none") return { campaignMode: "NONE" };
+  if (key.startsWith("claim:")) {
+    return {
+      campaignMode: "CUSTOMER_REDEMPTION",
+      redemptionId: key.slice("claim:".length),
+    };
+  }
+  return {
+    campaignMode: "MANUAL",
+    campaignId: key.slice("manual:".length),
+  };
+}
+
+function formatCampaignOption(option: QrScanCampaignOption): string {
+  return `${option.displayName()} · −${option.discountAmount} → ${option.payableAmount}`;
 }
 
 function formatDate(value: string | null): string {
@@ -49,15 +78,18 @@ export function PointsPage() {
     rules,
     scanLocations,
     lastScanResult,
+    lastScanPreview,
     isLoading,
     isScanLocationsLoading,
     error,
     loadRules,
     loadScanLocations,
     createRule,
+    previewQrScan,
     scanQr,
     clearError,
     clearScanResult,
+    clearScanPreview,
   } = usePointsManagement();
   const {
     branches,
@@ -69,6 +101,9 @@ export function PointsPage() {
   const [locationId, setLocationId] = useState("");
   const [overrideRuleId, setOverrideRuleId] = useState("");
   const [purchaseId, setPurchaseId] = useState("");
+  const [pendingQrToken, setPendingQrToken] = useState<string | null>(null);
+  const [campaignChoice, setCampaignChoice] =
+    useState<CampaignChoiceKey>("auto");
   const [scanError, setScanError] = useState<string | null>(null);
   const [isProcessingScan, setIsProcessingScan] = useState(false);
   const scanFormRef = useRef({
@@ -157,15 +192,22 @@ export function PointsPage() {
     );
   };
 
+  const resetPendingCheckout = useCallback(() => {
+    setPendingQrToken(null);
+    setCampaignChoice("auto");
+    clearScanPreview();
+  }, [clearScanPreview]);
+
   const handleQrDetected = useCallback(
     async (decodedToken: string) => {
-      if (isProcessingScan) return;
+      if (isProcessingScan || pendingQrToken) return;
 
       const form = scanFormRef.current;
       const amount = Number(form.purchaseAmount);
 
       setScanError(null);
       clearScanResult();
+      clearScanPreview();
 
       if (form.purchaseAmount.trim() === "" || Number.isNaN(amount) || amount < 0) {
         setScanError(t("points.scan.invalidAmount"));
@@ -180,27 +222,63 @@ export function PointsPage() {
 
       setIsProcessingScan(true);
       try {
-        await scanQr({
-          idempotencyKey: createIdempotencyKey(),
+        const preview = await previewQrScan({
           qrToken: decodedToken,
           purchaseAmount: amount,
           locationId: branchId,
-          ruleId: form.overrideRuleId.trim() || undefined,
-          purchaseId: form.purchaseId.trim() || undefined,
         });
         await qrScannerRef.current?.stopCamera();
-        setPurchaseAmount("");
-        setPurchaseId("");
+        setPendingQrToken(decodedToken);
+        setCampaignChoice(preview.suggestedCampaign ? "auto" : "none");
       } catch (err) {
         setScanError(
-          err instanceof Error ? err.message : t("points.scan.error")
+          err instanceof Error ? err.message : t("points.scan.previewError")
         );
       } finally {
         setIsProcessingScan(false);
       }
     },
-    [clearScanResult, isProcessingScan, scanQr, t]
+    [
+      clearScanPreview,
+      clearScanResult,
+      isProcessingScan,
+      pendingQrToken,
+      previewQrScan,
+      t,
+    ]
   );
+
+  const handleConfirmScan = async () => {
+    if (!pendingQrToken || !lastScanPreview) return;
+
+    setScanError(null);
+    setIsProcessingScan(true);
+
+    const choice = campaignChoiceFromKey(campaignChoice);
+
+    try {
+      await scanQr({
+        idempotencyKey: createIdempotencyKey(),
+        qrToken: pendingQrToken,
+        purchaseAmount: lastScanPreview.purchaseAmount,
+        locationId: lastScanPreview.locationId,
+        ruleId: overrideRuleId.trim() || undefined,
+        purchaseId: purchaseId.trim() || undefined,
+        campaignMode: choice.campaignMode,
+        campaignId: choice.campaignId,
+        redemptionId: choice.redemptionId,
+      });
+      setPurchaseAmount("");
+      setPurchaseId("");
+      resetPendingCheckout();
+    } catch (err) {
+      setScanError(
+        err instanceof Error ? err.message : t("points.scan.error")
+      );
+    } finally {
+      setIsProcessingScan(false);
+    }
+  };
 
   const handleCreateRule = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -378,26 +456,179 @@ export function PointsPage() {
             />
 
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              {t("points.scan.cameraHint")}
+              {pendingQrToken
+                ? t("points.scan.previewReadyHint")
+                : t("points.scan.cameraHint")}
             </p>
 
-            <QrScanner
-              ref={qrScannerRef}
-              onScan={(token) => {
-                void handleQrDetected(token);
-              }}
-              paused={
-                isProcessingScan ||
-                isLoading ||
-                scanLocations.length === 0 ||
-                !locationId
-              }
-            />
+            {!pendingQrToken ? (
+              <QrScanner
+                ref={qrScannerRef}
+                onScan={(token) => {
+                  void handleQrDetected(token);
+                }}
+                paused={
+                  isProcessingScan ||
+                  isLoading ||
+                  scanLocations.length === 0 ||
+                  !locationId
+                }
+              />
+            ) : null}
 
             {isProcessingScan ? (
               <p className="text-sm font-medium text-shop-primary">
-                {t("points.scan.processing")}
+                {pendingQrToken
+                  ? t("points.scan.confirming")
+                  : t("points.scan.previewing")}
               </p>
+            ) : null}
+
+            {lastScanPreview && pendingQrToken ? (
+              <div className="mt-2 space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-950/50">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                    {t("points.scan.previewTitle")}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    {t("points.scan.previewSubtitle", {
+                      customerId: lastScanPreview.customerId,
+                      amount: lastScanPreview.purchaseAmount,
+                    })}
+                  </p>
+                </div>
+
+                <fieldset className="space-y-2">
+                  <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {t("points.scan.campaignChoiceTitle")}
+                  </legend>
+
+                  <label className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900">
+                    <input
+                      type="radio"
+                      name="campaign-choice"
+                      className="mt-1"
+                      checked={campaignChoice === "auto"}
+                      onChange={() => setCampaignChoice("auto")}
+                    />
+                    <span>
+                      <span className="font-medium">
+                        {t("points.scan.campaignChoice.auto")}
+                      </span>
+                      {lastScanPreview.suggestedCampaign ? (
+                        <span className="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
+                          {formatCampaignOption(
+                            lastScanPreview.suggestedCampaign
+                          )}
+                        </span>
+                      ) : (
+                        <span className="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
+                          {t("points.scan.campaignChoice.autoEmpty")}
+                        </span>
+                      )}
+                    </span>
+                  </label>
+
+                  <label className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900">
+                    <input
+                      type="radio"
+                      name="campaign-choice"
+                      className="mt-1"
+                      checked={campaignChoice === "none"}
+                      onChange={() => setCampaignChoice("none")}
+                    />
+                    <span className="font-medium">
+                      {t("points.scan.campaignChoice.none")}
+                    </span>
+                  </label>
+
+                  {lastScanPreview.customerClaimedCampaigns.length > 0 ? (
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                        {t("points.scan.campaignChoice.claimed")}
+                      </p>
+                      {lastScanPreview.customerClaimedCampaigns.map((option) => {
+                        const key =
+                          `claim:${option.redemptionId || option.campaignId}` as CampaignChoiceKey;
+                        return (
+                          <label
+                            key={`claim-${option.campaignId}-${option.redemptionId || "none"}`}
+                            className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                          >
+                            <input
+                              type="radio"
+                              name="campaign-choice"
+                              className="mt-1"
+                              checked={campaignChoice === key}
+                              onChange={() => setCampaignChoice(key)}
+                              disabled={!option.hasRedemption()}
+                            />
+                            <span>
+                              <span className="font-medium">
+                                {formatCampaignOption(option)}
+                              </span>
+                              {!option.hasRedemption() ? (
+                                <span className="mt-0.5 block text-xs text-amber-700 dark:text-amber-300">
+                                  {t("points.scan.campaignChoice.missingRedemption")}
+                                </span>
+                              ) : null}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+
+                  {lastScanPreview.eligibleCampaigns.length > 0 ? (
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                        {t("points.scan.campaignChoice.eligible")}
+                      </p>
+                      {lastScanPreview.eligibleCampaigns.map((option) => {
+                        const key =
+                          `manual:${option.campaignId}` as CampaignChoiceKey;
+                        return (
+                          <label
+                            key={`eligible-${option.campaignId}`}
+                            className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                          >
+                            <input
+                              type="radio"
+                              name="campaign-choice"
+                              className="mt-1"
+                              checked={campaignChoice === key}
+                              onChange={() => setCampaignChoice(key)}
+                            />
+                            <span className="font-medium">
+                              {formatCampaignOption(option)}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                </fieldset>
+
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    type="button"
+                    isLoading={isProcessingScan || isLoading}
+                    onClick={() => {
+                      void handleConfirmScan();
+                    }}
+                  >
+                    {t("points.scan.confirm")}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={isProcessingScan || isLoading}
+                    onClick={resetPendingCheckout}
+                  >
+                    {t("points.scan.cancelPreview")}
+                  </Button>
+                </div>
+              </div>
             ) : null}
           </div>
 

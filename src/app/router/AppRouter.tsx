@@ -51,6 +51,11 @@ const CampaignsPage = lazy(() =>
     default: module.CampaignsPage,
   }))
 );
+const CampaignDetailPage = lazy(() =>
+  import("../../pages/CampaignDetailPage").then((module) => ({
+    default: module.CampaignDetailPage,
+  }))
+);
 const CustomersPage = lazy(() =>
   import("../../pages/CustomersPage").then((module) => ({
     default: module.CustomersPage,
@@ -195,6 +200,16 @@ export function AppRouter() {
                     requiredPermissions={PAGE_PERMISSIONS.campaigns}
                   >
                     <CampaignsPage />
+                  </RequirePermission>
+                }
+              />
+              <Route
+                path="/campaigns/:campaignId"
+                element={
+                  <RequirePermission
+                    requiredPermissions={PAGE_PERMISSIONS.campaigns}
+                  >
+                    <CampaignDetailPage />
                   </RequirePermission>
                 }
               />

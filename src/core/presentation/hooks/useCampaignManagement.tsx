@@ -1,11 +1,13 @@
 import { useCallback, useState } from "react";
 import {
   Campaign,
+  CampaignDetail,
   CreateCampaignResult,
 } from "../../domain/entities/Campaign";
 import { ICampaignService } from "../../domain/services/ICampaignService";
 import {
   CreateCampaignDTO,
+  UpdateCampaignDTO,
   UpdateCampaignStatusDTO,
 } from "../../application/dtos/CampaignDTO";
 import container from "../../infrastructure/di/container";
@@ -16,7 +18,12 @@ interface UseCampaignManagementReturn {
   isLoading: boolean;
   error: string | null;
   loadCampaigns: () => Promise<void>;
+  getCampaignById: (campaignId: string) => Promise<CampaignDetail>;
   createCampaign: (payload: CreateCampaignDTO) => Promise<CreateCampaignResult>;
+  updateCampaign: (
+    campaignId: string,
+    payload: UpdateCampaignDTO
+  ) => Promise<CampaignDetail>;
   updateCampaignStatus: (
     campaignId: string,
     payload: UpdateCampaignStatusDTO
@@ -57,6 +64,22 @@ export function useCampaignManagement(): UseCampaignManagementReturn {
     }
   }, [campaignService, clearError]);
 
+  const getCampaignById = useCallback(
+    async (campaignId: string) => {
+      try {
+        setIsLoading(true);
+        clearError();
+        return await campaignService.getCampaignById(campaignId);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load campaign");
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [campaignService, clearError]
+  );
+
   const createCampaign = useCallback(
     async (payload: CreateCampaignDTO) => {
       try {
@@ -76,6 +99,48 @@ export function useCampaignManagement(): UseCampaignManagementReturn {
       }
     },
     [campaignService, clearError, loadCampaigns]
+  );
+
+  const updateCampaign = useCallback(
+    async (campaignId: string, payload: UpdateCampaignDTO) => {
+      try {
+        setIsLoading(true);
+        clearError();
+        const updated = await campaignService.updateCampaign(
+          campaignId,
+          payload
+        );
+        setCampaigns((prev) =>
+          prev.map((campaign) =>
+            campaign.id === updated.id
+              ? new Campaign({
+                  id: updated.id,
+                  name: updated.name,
+                  slug: updated.slug,
+                  type: updated.type,
+                  status: updated.status,
+                  discountType: updated.discountType,
+                  discountValue: updated.discountValue,
+                  minimumPurchase: updated.minimumPurchase,
+                  birthdayWindowDays: updated.birthdayWindowDays,
+                  startsAt: updated.startsAt,
+                  endsAt: updated.endsAt,
+                  isDiscoverable: updated.isDiscoverable,
+                })
+              : campaign
+          )
+        );
+        return updated;
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to update campaign"
+        );
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [campaignService, clearError]
   );
 
   const updateCampaignStatus = useCallback(
@@ -111,7 +176,9 @@ export function useCampaignManagement(): UseCampaignManagementReturn {
     isLoading,
     error,
     loadCampaigns,
+    getCampaignById,
     createCampaign,
+    updateCampaign,
     updateCampaignStatus,
     clearError,
     clearCreateResult,

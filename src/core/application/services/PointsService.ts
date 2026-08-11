@@ -1,9 +1,18 @@
 import { Branch } from "../../domain/entities/Branch";
 import { PointRule } from "../../domain/entities/PointRule";
+import {
+  isCampaignMode,
+  QrScanPreview,
+  type CampaignMode,
+} from "../../domain/entities/QrScanPreview";
 import { QrScanResult } from "../../domain/entities/QrScanResult";
 import { IPointsRepository } from "../../domain/repositories/IPointsRepository";
 import { IPointsService } from "../../domain/services/IPointsService";
-import { CreatePointRuleDTO, QrScanRequestDTO } from "../dtos/PointsDTO";
+import {
+  CreatePointRuleDTO,
+  QrScanPreviewRequestDTO,
+  QrScanRequestDTO,
+} from "../dtos/PointsDTO";
 import {
   POINT_CALCULATION_TYPES,
   PointCalculationType,
@@ -16,25 +25,65 @@ function createIdempotencyKey(): string {
   return `scan-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function assertScanBasics(payload: {
+  qrToken: string;
+  purchaseAmount: number;
+  locationId: string;
+}): { qrToken: string; locationId: string } {
+  const qrToken = payload.qrToken.trim();
+  if (!qrToken) {
+    throw new Error("QR token is required");
+  }
+  if (
+    typeof payload.purchaseAmount !== "number" ||
+    Number.isNaN(payload.purchaseAmount) ||
+    payload.purchaseAmount < 0
+  ) {
+    throw new Error("Purchase amount must be a non-negative number");
+  }
+
+  const locationId = payload.locationId.trim();
+  if (!locationId) {
+    throw new Error("Branch location is required");
+  }
+
+  return { qrToken, locationId };
+}
+
 export class PointsService implements IPointsService {
   constructor(private readonly pointsRepository: IPointsRepository) {}
 
+  async previewQrScan(
+    payload: QrScanPreviewRequestDTO
+  ): Promise<QrScanPreview> {
+    const { qrToken, locationId } = assertScanBasics(payload);
+    return this.pointsRepository.previewQrScan({
+      qrToken,
+      purchaseAmount: payload.purchaseAmount,
+      locationId,
+    });
+  }
+
   async scanQr(payload: QrScanRequestDTO): Promise<QrScanResult> {
-    const qrToken = payload.qrToken.trim();
-    if (!qrToken) {
-      throw new Error("QR token is required");
-    }
-    if (
-      typeof payload.purchaseAmount !== "number" ||
-      Number.isNaN(payload.purchaseAmount) ||
-      payload.purchaseAmount < 0
-    ) {
-      throw new Error("Purchase amount must be a non-negative number");
+    const { qrToken, locationId } = assertScanBasics(payload);
+
+    let campaignMode: CampaignMode | undefined;
+    if (payload.campaignMode) {
+      const normalized = String(payload.campaignMode).trim().toUpperCase();
+      if (!isCampaignMode(normalized)) {
+        throw new Error(
+          "Campaign mode must be AUTO, CUSTOMER_REDEMPTION, MANUAL, or NONE"
+        );
+      }
+      campaignMode = normalized;
     }
 
-    const locationId = payload.locationId.trim();
-    if (!locationId) {
-      throw new Error("Branch location is required");
+    if (campaignMode === "CUSTOMER_REDEMPTION" && !payload.redemptionId?.trim()) {
+      throw new Error("Redemption id is required for CUSTOMER_REDEMPTION");
+    }
+
+    if (campaignMode === "MANUAL" && !payload.campaignId?.trim()) {
+      throw new Error("Campaign id is required for MANUAL campaign mode");
     }
 
     return this.pointsRepository.scanQr({
@@ -43,6 +92,9 @@ export class PointsService implements IPointsService {
       purchaseAmount: payload.purchaseAmount,
       locationId,
       ruleId: payload.ruleId?.trim() || undefined,
+      campaignMode,
+      campaignId: payload.campaignId?.trim() || undefined,
+      redemptionId: payload.redemptionId?.trim() || undefined,
       purchaseId: payload.purchaseId?.trim() || undefined,
     });
   }

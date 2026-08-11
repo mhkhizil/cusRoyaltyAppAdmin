@@ -3,8 +3,37 @@ import {
   type PointCalculationType,
 } from "../../domain/entities/PointRule";
 import { PointRule } from "../../domain/entities/PointRule";
+import {
+  QrScanPreview,
+  type CampaignMode,
+} from "../../domain/entities/QrScanPreview";
 import { QrScanResult } from "../../domain/entities/QrScanResult";
 import { nullableNumber, nullableString, normalizeArrayResponse } from "./dtoMapperUtils";
+
+export interface QrScanPreviewRequestDTO {
+  qrToken: string;
+  purchaseAmount: number;
+  locationId: string;
+}
+
+export interface QrScanCampaignOptionDTO {
+  campaignId: string;
+  campaignName: string;
+  campaignType: string;
+  discountAmount: number;
+  payableAmount: number;
+  redemptionId?: string | null;
+  source?: string | null;
+}
+
+export interface QrScanPreviewResponseDTO {
+  customerId: string;
+  purchaseAmount: number;
+  locationId: string;
+  suggestedCampaign?: QrScanCampaignOptionDTO | null;
+  customerClaimedCampaigns?: QrScanCampaignOptionDTO[] | null;
+  eligibleCampaigns?: QrScanCampaignOptionDTO[] | null;
+}
 
 export interface QrScanRequestDTO {
   idempotencyKey: string;
@@ -12,6 +41,9 @@ export interface QrScanRequestDTO {
   purchaseAmount: number;
   locationId: string;
   ruleId?: string;
+  campaignMode?: CampaignMode;
+  campaignId?: string;
+  redemptionId?: string;
   purchaseId?: string;
 }
 
@@ -128,6 +160,39 @@ export class PointsDTOMapper {
         : [],
       tierName: nullableString(dto.tierName),
       tierUpgraded: Boolean(dto.tierUpgraded),
+    });
+  }
+
+  static toQrScanCampaignOptionData(dto: QrScanCampaignOptionDTO) {
+    return {
+      campaignId: String(dto.campaignId),
+      campaignName: String(dto.campaignName || ""),
+      campaignType: String(dto.campaignType || ""),
+      discountAmount: Number(dto.discountAmount || 0),
+      payableAmount: Number(dto.payableAmount || 0),
+      redemptionId: nullableString(dto.redemptionId),
+      source: String(dto.source || ""),
+    };
+  }
+
+  static toQrScanPreviewDomain(dto: QrScanPreviewResponseDTO): QrScanPreview {
+    return new QrScanPreview({
+      customerId: String(dto.customerId),
+      purchaseAmount: Number(dto.purchaseAmount || 0),
+      locationId: String(dto.locationId),
+      suggestedCampaign: dto.suggestedCampaign
+        ? PointsDTOMapper.toQrScanCampaignOptionData(dto.suggestedCampaign)
+        : null,
+      customerClaimedCampaigns: Array.isArray(dto.customerClaimedCampaigns)
+        ? dto.customerClaimedCampaigns.map((item) =>
+            PointsDTOMapper.toQrScanCampaignOptionData(item)
+          )
+        : [],
+      eligibleCampaigns: Array.isArray(dto.eligibleCampaigns)
+        ? dto.eligibleCampaigns.map((item) =>
+            PointsDTOMapper.toQrScanCampaignOptionData(item)
+          )
+        : [],
     });
   }
 }

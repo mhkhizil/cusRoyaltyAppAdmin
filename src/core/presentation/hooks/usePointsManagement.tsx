@@ -1,10 +1,12 @@
 import { useCallback, useState } from "react";
 import { Branch } from "../../domain/entities/Branch";
 import { PointRule } from "../../domain/entities/PointRule";
+import { QrScanPreview } from "../../domain/entities/QrScanPreview";
 import { QrScanResult } from "../../domain/entities/QrScanResult";
 import { IPointsService } from "../../domain/services/IPointsService";
 import {
   CreatePointRuleDTO,
+  QrScanPreviewRequestDTO,
   QrScanRequestDTO,
 } from "../../application/dtos/PointsDTO";
 import container from "../../infrastructure/di/container";
@@ -13,6 +15,7 @@ interface UsePointsManagementReturn {
   rules: PointRule[];
   scanLocations: Branch[];
   lastScanResult: QrScanResult | null;
+  lastScanPreview: QrScanPreview | null;
   isLoading: boolean;
   isScanLocationsLoading: boolean;
   error: string | null;
@@ -20,15 +23,20 @@ interface UsePointsManagementReturn {
   loadRuleById: (ruleId: string) => Promise<PointRule>;
   loadScanLocations: () => Promise<void>;
   createRule: (payload: CreatePointRuleDTO) => Promise<PointRule>;
+  previewQrScan: (payload: QrScanPreviewRequestDTO) => Promise<QrScanPreview>;
   scanQr: (payload: QrScanRequestDTO) => Promise<QrScanResult>;
   clearError: () => void;
   clearScanResult: () => void;
+  clearScanPreview: () => void;
 }
 
 export function usePointsManagement(): UsePointsManagementReturn {
   const [rules, setRules] = useState<PointRule[]>([]);
   const [scanLocations, setScanLocations] = useState<Branch[]>([]);
   const [lastScanResult, setLastScanResult] = useState<QrScanResult | null>(
+    null
+  );
+  const [lastScanPreview, setLastScanPreview] = useState<QrScanPreview | null>(
     null
   );
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +51,10 @@ export function usePointsManagement(): UsePointsManagementReturn {
 
   const clearScanResult = useCallback(() => {
     setLastScanResult(null);
+  }, []);
+
+  const clearScanPreview = useCallback(() => {
+    setLastScanPreview(null);
   }, []);
 
   const loadRules = useCallback(async () => {
@@ -104,6 +116,27 @@ export function usePointsManagement(): UsePointsManagementReturn {
     [clearError, pointsService]
   );
 
+  const previewQrScan = useCallback(
+    async (payload: QrScanPreviewRequestDTO) => {
+      try {
+        setIsLoading(true);
+        clearError();
+        const preview = await pointsService.previewQrScan(payload);
+        setLastScanPreview(preview);
+        setLastScanResult(null);
+        return preview;
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to preview QR scan"
+        );
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [clearError, pointsService]
+  );
+
   const scanQr = useCallback(
     async (payload: QrScanRequestDTO) => {
       try {
@@ -111,6 +144,7 @@ export function usePointsManagement(): UsePointsManagementReturn {
         clearError();
         const result = await pointsService.scanQr(payload);
         setLastScanResult(result);
+        setLastScanPreview(null);
         return result;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to process QR scan");
@@ -126,6 +160,7 @@ export function usePointsManagement(): UsePointsManagementReturn {
     rules,
     scanLocations,
     lastScanResult,
+    lastScanPreview,
     isLoading,
     isScanLocationsLoading,
     error,
@@ -133,8 +168,10 @@ export function usePointsManagement(): UsePointsManagementReturn {
     loadRuleById,
     loadScanLocations,
     createRule,
+    previewQrScan,
     scanQr,
     clearError,
     clearScanResult,
+    clearScanPreview,
   };
 }

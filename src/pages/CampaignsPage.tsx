@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { ApiLoadingState } from "@/components/ApiLoadingState";
 import { Button } from "@/components/ui/Button";
 import {
@@ -9,6 +10,7 @@ import {
   isCampaignType,
   type CampaignStatus,
 } from "@/core/domain/entities/Campaign";
+import { useBranchManagement } from "@/core/presentation/hooks/useBranchManagement";
 import { useCampaignManagement } from "@/core/presentation/hooks/useCampaignManagement";
 
 const inputClassName =
@@ -44,6 +46,13 @@ function getStatusClassName(status: string): string {
   }
 }
 
+function parseOptionalNumber(value: string): number | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  const parsed = Number(trimmed);
+  return Number.isNaN(parsed) ? undefined : parsed;
+}
+
 export function CampaignsPage() {
   const { t } = useTranslation();
   const {
@@ -57,6 +66,11 @@ export function CampaignsPage() {
     clearError,
     clearCreateResult,
   } = useCampaignManagement();
+  const {
+    branches,
+    isLoading: isBranchesLoading,
+    loadBranches,
+  } = useBranchManagement();
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -64,7 +78,12 @@ export function CampaignsPage() {
   const [type, setType] = useState<(typeof CAMPAIGN_TYPES)[number]>("BIRTHDAY");
   const [discountValue, setDiscountValue] = useState("");
   const [minimumPurchase, setMinimumPurchase] = useState("");
+  const [maximumDiscount, setMaximumDiscount] = useState("");
   const [birthdayWindowDays, setBirthdayWindowDays] = useState("7");
+  const [perUserLimit, setPerUserLimit] = useState("1");
+  const [totalLimit, setTotalLimit] = useState("");
+  const [minimumTierId, setMinimumTierId] = useState("");
+  const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>([]);
   const [isDiscoverable, setIsDiscoverable] = useState(true);
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
@@ -75,6 +94,7 @@ export function CampaignsPage() {
     clearError();
     clearCreateResult();
     void loadCampaigns().catch(() => undefined);
+    void loadBranches().catch(() => undefined);
   };
 
   useEffect(() => {
@@ -89,18 +109,43 @@ export function CampaignsPage() {
     }
   };
 
+  const toggleLocation = (locationId: string) => {
+    setSelectedLocationIds((prev) =>
+      prev.includes(locationId)
+        ? prev.filter((id) => id !== locationId)
+        : [...prev, locationId]
+    );
+  };
+
+  const resetCreateForm = () => {
+    setName("");
+    setSlug("");
+    setSlugTouched(false);
+    setType("BIRTHDAY");
+    setDiscountValue("");
+    setMinimumPurchase("");
+    setMaximumDiscount("");
+    setBirthdayWindowDays("7");
+    setPerUserLimit("1");
+    setTotalLimit("");
+    setMinimumTierId("");
+    setSelectedLocationIds([]);
+    setIsDiscoverable(true);
+    setStartsAt("");
+    setEndsAt("");
+  };
+
   const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError(null);
     clearCreateResult();
 
     const parsedDiscount = Number(discountValue);
-    const parsedMinimum = minimumPurchase.trim()
-      ? Number(minimumPurchase)
-      : 0;
-    const parsedBirthdayWindow = birthdayWindowDays.trim()
-      ? Number(birthdayWindowDays)
-      : 0;
+    const parsedMinimum = parseOptionalNumber(minimumPurchase) ?? 0;
+    const parsedBirthdayWindow = parseOptionalNumber(birthdayWindowDays);
+    const parsedMaximumDiscount = parseOptionalNumber(maximumDiscount);
+    const parsedPerUserLimit = parseOptionalNumber(perUserLimit);
+    const parsedTotalLimit = parseOptionalNumber(totalLimit);
 
     if (!isCampaignType(type)) {
       setFormError(t("campaigns.createError"));
@@ -116,21 +161,17 @@ export function CampaignsPage() {
         discountValue: parsedDiscount,
         minimumPurchase: parsedMinimum,
         birthdayWindowDays: parsedBirthdayWindow,
+        maximumDiscount: parsedMaximumDiscount,
+        perUserLimit: parsedPerUserLimit,
+        totalLimit: parsedTotalLimit,
+        minimumTierId: minimumTierId.trim() || undefined,
+        locationIds:
+          selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
         isDiscoverable,
         startsAt: startsAt ? new Date(startsAt).toISOString() : undefined,
         endsAt: endsAt ? new Date(endsAt).toISOString() : undefined,
       });
-
-      setName("");
-      setSlug("");
-      setSlugTouched(false);
-      setType("BIRTHDAY");
-      setDiscountValue("");
-      setMinimumPurchase("");
-      setBirthdayWindowDays("7");
-      setIsDiscoverable(true);
-      setStartsAt("");
-      setEndsAt("");
+      resetCreateForm();
     } catch (err) {
       setFormError(
         err instanceof Error ? err.message : t("campaigns.createError")
@@ -243,6 +284,15 @@ export function CampaignsPage() {
             value={minimumPurchase}
             onChange={(event) => setMinimumPurchase(event.target.value)}
           />
+          <input
+            className={inputClassName}
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder={t("campaigns.fields.maximumDiscount")}
+            value={maximumDiscount}
+            onChange={(event) => setMaximumDiscount(event.target.value)}
+          />
           {type === "BIRTHDAY" ? (
             <input
               className={inputClassName}
@@ -252,9 +302,60 @@ export function CampaignsPage() {
               value={birthdayWindowDays}
               onChange={(event) => setBirthdayWindowDays(event.target.value)}
             />
-          ) : (
-            <div className="hidden sm:block" />
-          )}
+          ) : null}
+          <input
+            className={inputClassName}
+            type="number"
+            min="0"
+            placeholder={t("campaigns.fields.perUserLimit")}
+            value={perUserLimit}
+            onChange={(event) => setPerUserLimit(event.target.value)}
+          />
+          <input
+            className={inputClassName}
+            type="number"
+            min="0"
+            placeholder={t("campaigns.fields.totalLimit")}
+            value={totalLimit}
+            onChange={(event) => setTotalLimit(event.target.value)}
+          />
+          <input
+            className={`${inputClassName} sm:col-span-2`}
+            placeholder={t("campaigns.fields.minimumTierId")}
+            value={minimumTierId}
+            onChange={(event) => setMinimumTierId(event.target.value)}
+          />
+          <fieldset className="sm:col-span-2">
+            <legend className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+              {t("campaigns.fields.locationIds")}
+            </legend>
+            <p className="mb-2 text-xs text-slate-500 dark:text-slate-400">
+              {t("campaigns.fields.locationIdsHint")}
+            </p>
+            {branches.length === 0 ? (
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {isBranchesLoading
+                  ? t("campaigns.branches.loading")
+                  : t("campaigns.branches.empty")}
+              </p>
+            ) : (
+              <div className="grid gap-2 sm:grid-cols-2">
+                {branches.map((branch) => (
+                  <label
+                    key={branch.id}
+                    className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-200"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedLocationIds.includes(branch.id)}
+                      onChange={() => toggleLocation(branch.id)}
+                    />
+                    <span className="truncate">{branch.displayLabel}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </fieldset>
           <label className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 sm:col-span-2 dark:border-slate-700 dark:text-slate-200">
             <input
               type="checkbox"
@@ -316,14 +417,23 @@ export function CampaignsPage() {
             {t("campaigns.total", { count: campaigns.length })}
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-[48rem] w-full text-left text-sm md:min-w-full">
+            <table className="min-w-[56rem] w-full text-left text-sm md:min-w-full">
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-950/50 dark:text-slate-400">
                 <tr>
                   <th className="px-4 py-3 font-semibold">
                     {t("campaigns.columns.name")}
                   </th>
                   <th className="px-4 py-3 font-semibold">
+                    {t("campaigns.columns.slug")}
+                  </th>
+                  <th className="px-4 py-3 font-semibold">
                     {t("campaigns.columns.type")}
+                  </th>
+                  <th className="px-4 py-3 font-semibold">
+                    {t("campaigns.columns.discount")}
+                  </th>
+                  <th className="px-4 py-3 font-semibold">
+                    {t("campaigns.columns.minPurchase")}
                   </th>
                   <th className="px-4 py-3 font-semibold">
                     {t("campaigns.columns.status")}
@@ -332,10 +442,10 @@ export function CampaignsPage() {
                     {t("campaigns.columns.window")}
                   </th>
                   <th className="px-4 py-3 font-semibold">
-                    {t("campaigns.columns.discoverable")}
+                    {t("campaigns.columns.updateStatus")}
                   </th>
                   <th className="px-4 py-3 font-semibold">
-                    {t("campaigns.columns.updateStatus")}
+                    {t("campaigns.columns.actions")}
                   </th>
                 </tr>
               </thead>
@@ -352,10 +462,19 @@ export function CampaignsPage() {
                       className="text-slate-700 dark:text-slate-200"
                     >
                       <td className="px-4 py-3 font-medium">{campaign.name}</td>
+                      <td className="px-4 py-3 font-mono text-xs">
+                        {campaign.slug || "—"}
+                      </td>
                       <td className="px-4 py-3">
                         {t(`campaigns.types.${campaign.normalizedType()}`, {
                           defaultValue: campaign.type,
                         })}
+                      </td>
+                      <td className="px-4 py-3">
+                        {campaign.formatDiscountSummary()}
+                      </td>
+                      <td className="px-4 py-3">
+                        {campaign.minimumPurchase ?? "—"}
                       </td>
                       <td className="px-4 py-3">
                         <span className={getStatusClassName(normalizedStatus)}>
@@ -369,11 +488,6 @@ export function CampaignsPage() {
                         <div className="text-xs text-slate-500 dark:text-slate-400">
                           {formatDate(campaign.endsAt)}
                         </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        {campaign.isDiscoverable
-                          ? t("campaigns.discoverableYes")
-                          : t("campaigns.discoverableNo")}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex min-w-[10rem] flex-col gap-1">
@@ -401,6 +515,13 @@ export function CampaignsPage() {
                             </span>
                           ) : null}
                         </div>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <Link to={`/campaigns/${campaign.id}`}>
+                          <Button size="sm" variant="secondary">
+                            {t("campaigns.actions.edit")}
+                          </Button>
+                        </Link>
                       </td>
                     </tr>
                   );

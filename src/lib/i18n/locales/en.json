@@ -93,9 +93,12 @@
     },
     "scan": {
       "title": "QR scan",
-      "subtitle": "Select the checkout branch, enter the purchase amount, then scan the customer QR with the camera.",
+      "subtitle": "Select branch and amount, scan the customer QR to preview campaign options, then confirm checkout.",
       "submit": "Process scan",
+      "confirm": "Confirm checkout",
+      "cancelPreview": "Cancel / rescan",
       "error": "Unable to process QR scan",
+      "previewError": "Unable to preview QR scan campaigns",
       "invalidAmount": "Enter a valid purchase amount before scanning",
       "invalidLocation": "Select a branch before scanning",
       "resultTitle": "Scan successful",
@@ -103,9 +106,23 @@
       "startCamera": "Start camera",
       "stopCamera": "Stop camera",
       "cameraIdle": "Camera is off. Start it to scan a customer QR code.",
-      "cameraHint": "Point the camera at the customer's latest QR. The scan runs automatically when a code is detected.",
+      "cameraHint": "Point the camera at the customer's latest QR. Preview runs automatically when a code is detected.",
+      "previewReadyHint": "Choose a campaign option below, then confirm checkout.",
       "cameraError": "Unable to access the camera. Allow camera permission and try again.",
       "processing": "Processing QR scan...",
+      "previewing": "Loading campaign options...",
+      "confirming": "Confirming checkout...",
+      "previewTitle": "Choose campaign",
+      "previewSubtitle": "Customer {{customerId}} · bill {{amount}}",
+      "campaignChoiceTitle": "Promotion for this checkout",
+      "campaignChoice": {
+        "auto": "Use backend auto suggestion",
+        "autoEmpty": "No auto-suggested campaign for this bill/branch.",
+        "none": "No promotion",
+        "claimed": "Customer claimed in app",
+        "eligible": "Eligible campaigns",
+        "missingRedemption": "Missing redemption id — cannot use this claim."
+      },
       "fields": {
         "qrToken": "Customer QR token",
         "purchaseAmount": "Purchase amount",
@@ -238,7 +255,7 @@
     "title": "Campaigns",
     "description": "Create birthday, occasion, and discover-sale campaigns. Discounts apply at checkout before points are calculated.",
     "createTitle": "Create campaign",
-    "createSubtitle": "New campaigns start as DRAFT unless your backend activates them immediately.",
+    "createSubtitle": "New campaigns start as DRAFT unless your backend activates them immediately. Leave branches unchecked for all branches.",
     "createSubmit": "Create campaign",
     "createError": "Unable to create campaign",
     "createSuccess": "Campaign created ({{id}}). Points awarded: {{pointsAwarded}}, recipients: {{recipients}}.",
@@ -251,13 +268,25 @@
     "fields": {
       "name": "Campaign name",
       "slug": "Slug (URL key)",
+      "description": "Description (optional)",
       "type": "Campaign type",
       "discountValue": "Discount value (%)",
       "minimumPurchase": "Minimum purchase",
+      "maximumDiscount": "Maximum discount (optional)",
       "birthdayWindowDays": "Birthday window (days)",
+      "perUserLimit": "Per-user limit",
+      "totalLimit": "Total limit (optional)",
+      "minimumTierId": "Minimum tier ID (optional)",
+      "locationIds": "Branch scope",
+      "locationIdsHint": "Leave all unchecked to apply to every branch.",
+      "locationIdsEditHint": "Clear all checkboxes to apply to every branch.",
       "isDiscoverable": "Show in customer discover feed",
       "startsAt": "Starts at",
       "endsAt": "Ends at"
+    },
+    "branches": {
+      "loading": "Loading branches...",
+      "empty": "No branches available."
     },
     "types": {
       "BIRTHDAY": "Birthday",
@@ -272,11 +301,31 @@
     },
     "columns": {
       "name": "Name",
+      "slug": "Slug",
       "type": "Type",
+      "discount": "Discount",
+      "minPurchase": "Min purchase",
       "status": "Status",
       "window": "Schedule",
       "discoverable": "Discoverable",
-      "updateStatus": "Update status"
+      "updateStatus": "Update status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit"
+    },
+    "details": {
+      "title": "Edit campaign",
+      "back": "Back to campaigns",
+      "loading": "Loading campaign...",
+      "notFound": "Campaign not found",
+      "loadError": "Unable to load campaign",
+      "updateError": "Unable to update campaign",
+      "updateSuccess": "Campaign updated.",
+      "save": "Save changes",
+      "archivedLocked": "Archived campaigns cannot be edited. Change status first (unarchive), then edit.",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
     }
   },
   "adminUsers": {

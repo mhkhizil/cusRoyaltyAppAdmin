@@ -1,12 +1,18 @@
 import axios from "axios";
-import { Campaign, CreateCampaignResult } from "../../domain/entities/Campaign";
+import {
+  Campaign,
+  CampaignDetail,
+  CreateCampaignResult,
+} from "../../domain/entities/Campaign";
 import { ICampaignRepository } from "../../domain/repositories/ICampaignRepository";
 import type { ApiEnvelopeDTO } from "../../application/dtos/AuthDTO";
 import {
+  CampaignDetailResponseDTO,
   CampaignDTOMapper,
   CampaignResponseDTO,
   CreateCampaignDTO,
   CreateCampaignResponseDTO,
+  UpdateCampaignDTO,
   UpdateCampaignStatusDTO,
 } from "../../application/dtos/CampaignDTO";
 import { HttpClient } from "../api/HttpClient";
@@ -41,6 +47,22 @@ export class ApiCampaignRepository implements ICampaignRepository {
     }
   }
 
+  async getCampaignById(campaignId: string): Promise<CampaignDetail> {
+    try {
+      const response = await this.httpClient.get<
+        ApiEnvelopeDTO<CampaignDetailResponseDTO>
+      >(API_ENDPOINTS.CAMPAIGNS.BY_ID(campaignId));
+
+      if (response.success === false || !response.data) {
+        throw new Error(response.message || "Failed to load campaign");
+      }
+
+      return CampaignDTOMapper.toCampaignDetailDomain(response.data);
+    } catch (error) {
+      throw new Error(extractErrorMessage(error, "Failed to load campaign"));
+    }
+  }
+
   async createCampaign(
     payload: CreateCampaignDTO
   ): Promise<CreateCampaignResult> {
@@ -56,6 +78,25 @@ export class ApiCampaignRepository implements ICampaignRepository {
       return CampaignDTOMapper.toCreateCampaignResultDomain(response.data);
     } catch (error) {
       throw new Error(extractErrorMessage(error, "Failed to create campaign"));
+    }
+  }
+
+  async updateCampaign(
+    campaignId: string,
+    payload: UpdateCampaignDTO
+  ): Promise<CampaignDetail> {
+    try {
+      const response = await this.httpClient.patch<
+        ApiEnvelopeDTO<CampaignDetailResponseDTO>
+      >(API_ENDPOINTS.CAMPAIGNS.BY_ID(campaignId), payload);
+
+      if (response.success === false || !response.data) {
+        throw new Error(response.message || "Failed to update campaign");
+      }
+
+      return CampaignDTOMapper.toCampaignDetailDomain(response.data);
+    } catch (error) {
+      throw new Error(extractErrorMessage(error, "Failed to update campaign"));
     }
   }
 

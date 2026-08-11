@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Branch } from "../../domain/entities/Branch";
 import { PointRule } from "../../domain/entities/PointRule";
+import { QrScanPreview } from "../../domain/entities/QrScanPreview";
 import { QrScanResult } from "../../domain/entities/QrScanResult";
 import { IPointsRepository } from "../../domain/repositories/IPointsRepository";
 import type { ApiEnvelopeDTO } from "../../application/dtos/AuthDTO";
@@ -9,6 +10,8 @@ import {
   CreatePointRuleDTO,
   PointRuleResponseDTO,
   PointsDTOMapper,
+  QrScanPreviewRequestDTO,
+  QrScanPreviewResponseDTO,
   QrScanRequestDTO,
   QrScanResponseDTO,
 } from "../../application/dtos/PointsDTO";
@@ -26,6 +29,24 @@ function extractErrorMessage(error: unknown, fallback: string): string {
 
 export class ApiPointsRepository implements IPointsRepository {
   constructor(private readonly httpClient: HttpClient) {}
+
+  async previewQrScan(
+    payload: QrScanPreviewRequestDTO
+  ): Promise<QrScanPreview> {
+    try {
+      const response = await this.httpClient.post<
+        ApiEnvelopeDTO<QrScanPreviewResponseDTO>
+      >(API_ENDPOINTS.POINTS.QR_SCAN_PREVIEW, payload);
+
+      if (response.success === false || !response.data) {
+        throw new Error(response.message || "Failed to preview QR scan");
+      }
+
+      return PointsDTOMapper.toQrScanPreviewDomain(response.data);
+    } catch (error) {
+      throw new Error(extractErrorMessage(error, "Failed to preview QR scan"));
+    }
+  }
 
   async scanQr(payload: QrScanRequestDTO): Promise<QrScanResult> {
     try {

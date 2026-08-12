@@ -43,6 +43,19 @@ export const API_ENDPOINTS = {
       `/api/v1/admin/dashboard/campaigns/${campaignId}/status`,
   },
 
+  REWARDS: {
+    BASE: "/api/v1/admin/dashboard/rewards",
+    BY_ID: (rewardId: string) =>
+      `/api/v1/admin/dashboard/rewards/${rewardId}`,
+    UPDATE_STATUS: (rewardId: string) =>
+      `/api/v1/admin/dashboard/rewards/${rewardId}/status`,
+    REDEMPTIONS: "/api/v1/admin/dashboard/rewards/redemptions",
+    FULFILL_REDEMPTION: (redemptionId: string) =>
+      `/api/v1/admin/dashboard/rewards/redemptions/${redemptionId}/fulfill`,
+    IMAGE: (rewardId: string) =>
+      `/api/v1/admin/dashboard/rewards/${rewardId}/image`,
+  },
+
   OPS: {
     BRANCHES: "/api/v1/admin/dashboard/ops/branches",
   },

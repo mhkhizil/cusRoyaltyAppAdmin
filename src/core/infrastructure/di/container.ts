@@ -30,6 +30,10 @@ import { ICampaignRepository } from "../../domain/repositories/ICampaignReposito
 import { ApiCampaignRepository } from "../repositories/ApiCampaignRepository";
 import { ICampaignService } from "../../domain/services/ICampaignService";
 import { CampaignService } from "../../application/services/CampaignService";
+import { IRewardRepository } from "../../domain/repositories/IRewardRepository";
+import { ApiRewardRepository } from "../repositories/ApiRewardRepository";
+import { IRewardService } from "../../domain/services/IRewardService";
+import { RewardService } from "../../application/services/RewardService";
 
 /**
  * Dependency Injection Container
@@ -85,6 +89,11 @@ class Container {
       new ApiCampaignRepository(this.resolve("httpClient"))
     );
 
+    this.register<IRewardRepository>(
+      "rewardRepository",
+      new ApiRewardRepository(this.resolve("httpClient"))
+    );
+
     this.register<IAuthService>(
       "authService",
       new AuthService(this.resolve("authRepository"))
@@ -123,6 +132,11 @@ class Container {
     this.register<ICampaignService>(
       "campaignService",
       new CampaignService(this.resolve("campaignRepository"))
+    );
+
+    this.register<IRewardService>(
+      "rewardService",
+      new RewardService(this.resolve("rewardRepository"))
     );
   }
 

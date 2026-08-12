@@ -56,6 +56,16 @@ const CampaignDetailPage = lazy(() =>
     default: module.CampaignDetailPage,
   }))
 );
+const RewardsPage = lazy(() =>
+  import("../../pages/RewardsPage").then((module) => ({
+    default: module.RewardsPage,
+  }))
+);
+const RewardDetailPage = lazy(() =>
+  import("../../pages/RewardDetailPage").then((module) => ({
+    default: module.RewardDetailPage,
+  }))
+);
 const CustomersPage = lazy(() =>
   import("../../pages/CustomersPage").then((module) => ({
     default: module.CustomersPage,
@@ -210,6 +220,26 @@ export function AppRouter() {
                     requiredPermissions={PAGE_PERMISSIONS.campaigns}
                   >
                     <CampaignDetailPage />
+                  </RequirePermission>
+                }
+              />
+              <Route
+                path="/rewards"
+                element={
+                  <RequirePermission
+                    requiredPermissions={PAGE_PERMISSIONS.rewards}
+                  >
+                    <RewardsPage />
+                  </RequirePermission>
+                }
+              />
+              <Route
+                path="/rewards/:rewardId"
+                element={
+                  <RequirePermission
+                    requiredPermissions={PAGE_PERMISSIONS.rewards}
+                  >
+                    <RewardDetailPage />
                   </RequirePermission>
                 }
               />

@@ -37,6 +37,8 @@
     "pointsMeta": "QR & rules",
     "campaignsTitle": "Campaigns",
     "campaignsMeta": "Discounts & promos",
+    "rewardsTitle": "Rewards",
+    "rewardsMeta": "Offers & redemptions",
     "adminUsersTitle": "Admin users",
     "adminUsersMeta": "Staff RBAC",
     "adminRolesTitle": "Admin roles",
@@ -326,6 +328,117 @@
       "archivedLocked": "Archived campaign များကို edit မရပါ။ Status ကို အရင်ပြောင်းပြီးမှ ပြင်ပါ။",
       "createdAt": "Created",
       "updatedAt": "Updated"
+    }
+  },
+  "rewards": {
+    "title": "Rewards",
+    "description": "Loyalty reward နှင့် free-product offer များ ဖန်တီးပါ။ Store တွင် pending redemption များကို fulfill လုပ်ပါ။",
+    "createTitle": "Reward ဖန်တီးရန်",
+    "createSubtitle": "Reward အသစ်များသည် backend ပေါ် မူတည်ပြီး DRAFT ဖြင့် စတင်နိုင်သည်။",
+    "createSubmit": "Reward ဖန်တီးမည်",
+    "createError": "Reward ဖန်တီး၍ မရပါ",
+    "createSuccess": "Reward ဖန်တီးပြီး ({{id}})။ Points awarded: {{pointsAwarded}}, recipients: {{recipients}}.",
+    "statusUpdateError": "Reward status update လုပ်၍ မရပါ",
+    "loading": "Reward များ ဖွင့်နေသည်...",
+    "empty": "Reward မရှိသေးပါ။ အပေါ်တွင် တစ်ခု ဖန်တီးပါ။",
+    "total": "reward {{count}} ခု",
+    "freeClaim": "Free",
+    "validation": {
+      "bonusPointsRequired": "Free bonus reward အတွက် bonus points amount လိုအပ်သည်",
+      "pointsCostRequired": "Discount နှင့် free-product reward များအတွက် points cost လိုအပ်သည်"
+    },
+    "fields": {
+      "name": "Reward name",
+      "slug": "Slug (URL key)",
+      "description": "Description (optional)",
+      "image": "Reward image (optional)",
+      "chooseImage": "Choose image",
+      "clearSelection": "Clear selection",
+      "imageHint": "JPEG, PNG, or WebP up to 5MB.",
+      "imagePreviewAlt": "Selected reward image preview",
+      "type": "Reward type",
+      "pointsCost": "Points cost",
+      "bonusPoints": "Bonus points granted",
+      "bonusPointsHint": "Free claim — customers receive these points without spending any.",
+      "discountValue": "Discount value",
+      "freeProductId": "Free product ID",
+      "minimumTierId": "Minimum tier ID (optional)",
+      "pointsCostHint": "Points deducted when a customer redeems this reward.",
+      "unlockThreshold": "Unlock threshold (optional)",
+      "stockQuantity": "Stock quantity (optional)",
+      "perUserLimit": "Per-user limit (optional)",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at"
+    },
+    "types": {
+      "BONUS_POINTS": "Bonus points (free claim)",
+      "DISCOUNT": "Discount",
+      "FREE_PRODUCT": "Free product"
+    },
+    "statuses": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "PAUSED": "Paused",
+      "ARCHIVED": "Archived"
+    },
+    "redemptionStatuses": {
+      "PENDING": "Pending",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired"
+    },
+    "columns": {
+      "name": "Name",
+      "slug": "Slug",
+      "type": "Type",
+      "pointsCost": "Points cost",
+      "status": "Status",
+      "window": "Schedule",
+      "updateStatus": "Update status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit"
+    },
+    "details": {
+      "title": "Reward ပြင်ရန်",
+      "back": "Rewards သို့ ပြန်သွားရန်",
+      "loading": "Reward ဖွင့်နေသည်...",
+      "notFound": "Reward မတွေ့ပါ",
+      "loadError": "Reward ဖွင့်၍ မရပါ",
+      "updateError": "Reward update လုပ်၍ မရပါ",
+      "updateSuccess": "Reward update လုပ်ပြီးပါပြီ။",
+      "save": "သိမ်းမည်",
+      "archivedLocked": "Archived reward များကို edit မရပါ။ Status ကို အရင်ပြောင်းပြီးမှ ပြင်ပါ။",
+      "noImage": "Image မတင်ရသေးပါ။",
+      "uploadImage": "Upload image",
+      "clearImage": "Remove image",
+      "imageUploadError": "Reward image upload လုပ်၍ မရပါ",
+      "imageClearError": "Reward image ဖယ်ရှား၍ မရပါ",
+      "legacyPointsCostWarning": "This bonus reward still has a points cost of {{pointsCost}}. Save to reset it to a free claim (cost 0).",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    },
+    "redemptions": {
+      "title": "Redemptions",
+      "description": "PENDING FREE_PRODUCT သို့မဟုတ် DISCOUNT claim များကို redemption code ဖြင့် ရှာပြီး fulfill လုပ်ပါ။",
+      "loading": "Redemption များ ဖွင့်နေသည်...",
+      "empty": "Filter နှင့် ကိုက်ညီသော redemption မရှိပါ။",
+      "filterReward": "Filter by reward",
+      "filterStatus": "Filter by status",
+      "allRewards": "All rewards",
+      "allStatuses": "All statuses",
+      "fulfill": "Fulfill",
+      "fulfillError": "Redemption fulfill လုပ်၍ မရပါ",
+      "columns": {
+        "code": "Code",
+        "reward": "Reward",
+        "type": "Type",
+        "status": "Status",
+        "pointsSpent": "Points spent",
+        "redeemedAt": "Redeemed at",
+        "actions": "Actions"
+      }
     }
   },
   "adminUsers": {

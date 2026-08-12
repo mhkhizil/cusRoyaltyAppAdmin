@@ -37,6 +37,8 @@
     "pointsMeta": "QR & rules",
     "campaignsTitle": "Campaigns",
     "campaignsMeta": "Discounts & promos",
+    "rewardsTitle": "Rewards",
+    "rewardsMeta": "Offers & redemptions",
     "adminUsersTitle": "Admin users",
     "adminUsersMeta": "Staff RBAC",
     "adminRolesTitle": "Admin roles",
@@ -326,6 +328,117 @@
       "archivedLocked": "Archived campaigns cannot be edited. Change status first (unarchive), then edit.",
       "createdAt": "Created",
       "updatedAt": "Updated"
+    }
+  },
+  "rewards": {
+    "title": "Rewards",
+    "description": "Create loyalty rewards and free-product offers. Fulfill pending redemptions at the store.",
+    "createTitle": "Create reward",
+    "createSubtitle": "New rewards start as DRAFT unless your backend activates them immediately.",
+    "createSubmit": "Create reward",
+    "createError": "Unable to create reward",
+    "createSuccess": "Reward created ({{id}}). Points awarded: {{pointsAwarded}}, recipients: {{recipients}}.",
+    "statusUpdateError": "Unable to update reward status",
+    "loading": "Loading rewards...",
+    "empty": "No rewards yet. Create one above.",
+    "total": "{{count}} rewards",
+    "freeClaim": "Free",
+    "validation": {
+      "bonusPointsRequired": "Bonus points amount is required for free bonus rewards",
+      "pointsCostRequired": "Points cost is required for discount and free-product rewards"
+    },
+    "fields": {
+      "name": "Reward name",
+      "slug": "Slug (URL key)",
+      "description": "Description (optional)",
+      "image": "Reward image (optional)",
+      "chooseImage": "Choose image",
+      "clearSelection": "Clear selection",
+      "imageHint": "JPEG, PNG, or WebP up to 5MB.",
+      "imagePreviewAlt": "Selected reward image preview",
+      "type": "Reward type",
+      "pointsCost": "Points cost",
+      "bonusPoints": "Bonus points granted",
+      "bonusPointsHint": "Free claim — customers receive these points without spending any.",
+      "discountValue": "Discount value",
+      "freeProductId": "Free product ID",
+      "minimumTierId": "Minimum tier ID (optional)",
+      "pointsCostHint": "Points deducted when a customer redeems this reward.",
+      "unlockThreshold": "Unlock threshold (optional)",
+      "stockQuantity": "Stock quantity (optional)",
+      "perUserLimit": "Per-user limit (optional)",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at"
+    },
+    "types": {
+      "BONUS_POINTS": "Bonus points (free claim)",
+      "DISCOUNT": "Discount",
+      "FREE_PRODUCT": "Free product"
+    },
+    "statuses": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "PAUSED": "Paused",
+      "ARCHIVED": "Archived"
+    },
+    "redemptionStatuses": {
+      "PENDING": "Pending",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired"
+    },
+    "columns": {
+      "name": "Name",
+      "slug": "Slug",
+      "type": "Type",
+      "pointsCost": "Points cost",
+      "status": "Status",
+      "window": "Schedule",
+      "updateStatus": "Update status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit"
+    },
+    "details": {
+      "title": "Edit reward",
+      "back": "Back to rewards",
+      "loading": "Loading reward...",
+      "notFound": "Reward not found",
+      "loadError": "Unable to load reward",
+      "updateError": "Unable to update reward",
+      "updateSuccess": "Reward updated.",
+      "save": "Save changes",
+      "archivedLocked": "Archived rewards cannot be edited. Change status first (unarchive), then edit.",
+      "noImage": "No image uploaded yet.",
+      "uploadImage": "Upload image",
+      "clearImage": "Remove image",
+      "imageUploadError": "Unable to upload reward image",
+      "imageClearError": "Unable to remove reward image",
+      "legacyPointsCostWarning": "This bonus reward still has a points cost of {{pointsCost}}. Save to reset it to a free claim (cost 0).",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    },
+    "redemptions": {
+      "title": "Redemptions",
+      "description": "Find PENDING FREE_PRODUCT or DISCOUNT claims and fulfill them by redemption code.",
+      "loading": "Loading redemptions...",
+      "empty": "No redemptions match the current filters.",
+      "filterReward": "Filter by reward",
+      "filterStatus": "Filter by status",
+      "allRewards": "All rewards",
+      "allStatuses": "All statuses",
+      "fulfill": "Fulfill",
+      "fulfillError": "Unable to fulfill redemption",
+      "columns": {
+        "code": "Code",
+        "reward": "Reward",
+        "type": "Type",
+        "status": "Status",
+        "pointsSpent": "Points spent",
+        "redeemedAt": "Redeemed at",
+        "actions": "Actions"
+      }
     }
   },
   "adminUsers": {

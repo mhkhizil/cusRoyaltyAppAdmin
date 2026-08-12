@@ -56,6 +56,7 @@
   input[type="checkbox"]:not(:disabled),
   input[type="radio"]:not(:disabled),
   select:not(:disabled),
+  input[type="file"]:not(:disabled),
   summary {
     @apply cursor-pointer;
   }

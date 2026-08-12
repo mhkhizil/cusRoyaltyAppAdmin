@@ -69,6 +69,17 @@ function CampaignsIcon() {
   );
 }
 
+function RewardsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+      <path d="M12 8l2.5 5 5.5.8-4 3.9.9 5.5L12 19.8 7.1 23.2l.9-5.5-4-3.9 5.5-.8z" />
+      <path d="M5 3h14" />
+      <path d="M7 3v4" />
+      <path d="M17 3v4" />
+    </svg>
+  );
+}
+
 function CustomersIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
@@ -250,6 +261,16 @@ function SidebarContent({
             icon={<CampaignsIcon />}
             title={t("shell.campaignsTitle")}
             meta={t("shell.campaignsMeta")}
+          />
+        ) : null}
+        {canAccess(PAGE_PERMISSIONS.rewards) ? (
+          <SidebarNavItem
+            to="/rewards"
+            collapsed={collapsed}
+            onNavigate={onNavigate}
+            icon={<RewardsIcon />}
+            title={t("shell.rewardsTitle")}
+            meta={t("shell.rewardsMeta")}
           />
         ) : null}
         {canAccess(PAGE_PERMISSIONS.adminUsers) ? (
